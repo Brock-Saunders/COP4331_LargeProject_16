@@ -1,7 +1,7 @@
-const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb+srv://RickLeinecker:COP4331Rocks@cluster0-4pisv.mongodb.net / COP4331 ? retryWrites = true & w=majority';
-const client = new MongoClient(url);
-client.connect();
+//const MongoClient = require('mongodb').MongoClient;
+//const url = 'mongodb+srv://RickLeinecker:COP4331Rocks@cluster0-4pisv.mongodb.net / COP4331 ? retryWrites = true & w=majority';
+//const client = new MongoClient(url);
+//client.connect();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -28,7 +28,7 @@ app.post('/api/addcard', async (req, res, next) => {
     const newCard = { Card: card, UserId: userId };
     var error = '';
     try {
-        const db = client.db();
+        //const db = client.db();
         const result = db.collection('Cards').insertOne(newCard);
     }
     catch (e) {
@@ -43,7 +43,7 @@ app.post('/api/login', async (req, res, next) => {
     // outgoing: id, firstName, lastName, error
     var error = '';
     const { login, password } = req.body;
-    const db = client.db();
+    //const db = client.db();
     const results = await
         db.collection('Users').find({ Login: login, Password: password }).toArray();
     var id = -1;
@@ -63,7 +63,7 @@ app.post('/api/searchcards', async (req, res, next) => {
     var error = '';
     const { userId, search } = req.body;
     var _search = search.trim();
-    const db = client.db();
+    //const db = client.db();
     const results = await db.collection('Cards').find({ "Card": { $regex: _search + '.*' } }).toArray();
     var _ret = [];
     for (var i = 0; i < results.length; i++) {
