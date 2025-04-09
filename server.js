@@ -1,7 +1,9 @@
+// DATABASE SETUP / CONNECTION
 //const MongoClient = require('mongodb').MongoClient;
-//const url = 'mongodb+srv://RickLeinecker:COP4331Rocks@cluster0-4pisv.mongodb.net / COP4331 ? retryWrites = true & w=majority';
+//const url = 'mongodb+srv://jrodd2249:8zzirHk1PMuL6Iqr@largeproject.z7pqqcy.mongodb.net/?retryWrites=true&w=majority&appName=LargeProject';
 //const client = new MongoClient(url);
 //client.connect();
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -21,6 +23,32 @@ app.use((req, res, next) => {
     next();
 });
 app.listen(5000); // start Node + Express server on port 5000
+
+// USER API ENDPOINTS:
+// POST /api/users/register
+
+// POST /api/users/login
+
+// POST /api/users/logout
+
+
+// DOCUMENT API ENDPOINTS:
+// GET /api/documents
+
+// POST /api/documents
+
+// GET /api/documents/:id
+
+// PUT /api/documents/:id
+
+// DELETE /api/documents/:id
+
+
+// OPTIONAL SEARCH API ENDPOINTS:
+// GET /api/documents/search?q=searchTerm
+
+
+// OLD CARDS LAB API ENDPOINTS
 app.post('/api/addcard', async (req, res, next) => {
     // incoming: userId, color
     // outgoing: error
@@ -38,6 +66,7 @@ app.post('/api/addcard', async (req, res, next) => {
     var ret = { error: error };
     res.status(200).json(ret);
 });
+
 app.post('/api/login', async (req, res, next) => {
     // incoming: login, password
     // outgoing: id, firstName, lastName, error
@@ -57,6 +86,7 @@ app.post('/api/login', async (req, res, next) => {
     var ret = { id: id, firstName: fn, lastName: ln, error: '' };
     res.status(200).json(ret);
 });
+
 app.post('/api/searchcards', async (req, res, next) => {
     // incoming: userId, search
     // outgoing: results[], error
@@ -72,6 +102,8 @@ app.post('/api/searchcards', async (req, res, next) => {
     var ret = { results: _ret, error: error };
     res.status(200).json(ret);
 });
+
+
 var cardList =
     [
         'Roy Campanella',
