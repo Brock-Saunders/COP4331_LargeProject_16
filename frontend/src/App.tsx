@@ -3,9 +3,9 @@ import EditorBox from "./components/EditorBox";
 
 const App = () => {
   return (
-    <div className="card">
-      <EditorBox/>
-    </div>
+    <div>
+        <EditorBox/>
+      </div>
   )
 }
 
