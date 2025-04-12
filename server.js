@@ -24,15 +24,57 @@ app.use((req, res, next) => {
 });
 app.listen(5000); // start Node + Express server on port 5000
 
+
 // USER API ENDPOINTS:
+
 // POST /api/users/register
+app.post('/api/users/register', async (req, res, next) => {
+    // incoming: login, password, firstName, lastName, email
+    // outgoing: error
+    const { login, password, firstName, lastName, email } = req.body;
+    var error = '';
+
+    // check if email already exists
+    const db = client.db();
+    db.collection('Users').find({ Email: email }).toArray((err, results) => {
+        if (err) {
+            error = err.toString();
+        }
+        if (results.length > 0) {
+            error = 'Email already exists';
+        }
+    });
+
+    // create new user
+    const newUser = {
+        Login: login,
+        Password: password,
+        FirstName: firstName,
+        LastName: lastName,
+        Email: email
+    };
+    try {
+        const db = client.db();
+        db.collection('Users').insertOne(newUser, (err, result) => {
+            if (err) {
+                error = err.toString();
+            }
+        });
+    } catch (e) {
+        error = e.toString();
+    }
+    var ret = { error: error };
+    res.status(200).json(ret);
+});
 
 // POST /api/users/login
 
 // POST /api/users/logout
 
 
+
 // DOCUMENT API ENDPOINTS:
+
 // GET /api/documents
 
 // POST /api/documents
@@ -45,6 +87,7 @@ app.listen(5000); // start Node + Express server on port 5000
 
 
 // OPTIONAL SEARCH API ENDPOINTS:
+
 // GET /api/documents/search?q=searchTerm
 
 
