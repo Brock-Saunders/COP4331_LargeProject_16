@@ -16,7 +16,7 @@ const TipTap: React.FC = () => {
               content: '<p> Example Text </p>', 
               editorProps: {
                 attributes: {
-                  class: "bg-red-500", 
+                  class: "bg-dark-gray-500", 
                 }
               },
               autofocus: true, 
