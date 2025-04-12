@@ -1,12 +1,12 @@
 import React from "react"; 
-import EditorBox from "./components/EditorBox";
+import NewNote from "./pages/NewNote";
 
 const App = () => {
   return (
     <div>
-        <EditorBox/>
-      </div>
-  )
+      <NewNote></NewNote>
+    </div>
+  );
 }
 
 export default App; 
