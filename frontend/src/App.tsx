@@ -1,13 +1,12 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import './App.css';
+import React from "react"; 
+import EditorBox from "./components/EditorBox";
 
-function App() {
+const App = () => {
   return (
-    <Router >
-      <Routes>
-
-      </Routes>
-    </Router>
-  );
+    <div className="card">
+      <EditorBox/>
+    </div>
+  )
 }
-export default App;
+
+export default App; 
