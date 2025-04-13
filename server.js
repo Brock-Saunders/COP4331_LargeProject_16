@@ -1,9 +1,10 @@
+const dotenv = require('dotenv').config();
 // DATABASE SETUP / CONNECTION
 //const MongoClient = require('mongodb').MongoClient;
-//const url = 'mongodb+srv://jrodd2249:8zzirHk1PMuL6Iqr@largeproject.z7pqqcy.mongodb.net/?retryWrites=true&w=majority&appName=LargeProject';
+const url = process.env.MONGO_DB_CONNECTION_STRING;
 //const client = new MongoClient(url);
 //client.connect();
-
+console.log(url)
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -22,7 +23,7 @@ app.use((req, res, next) => {
     );
     next();
 });
-app.listen(5000); // start Node + Express server on port 5000
+app.listen(5600); // start Node + Express server on port 5000
 
 // USER API ENDPOINTS:
 // POST /api/users/register

@@ -3,6 +3,7 @@ import { Editor  } from '@tiptap/core';
 import MenuBar from './MenuBar'
 import CustomExtensions from '../extensions/CustomHeading'
 
+
 const TipTap: React.FC = () => {
   const editorContainerRef = useRef<HTMLDivElement>(null); 
   const editorInstanceRef = useRef<Editor | null>(null); 
@@ -16,7 +17,7 @@ const TipTap: React.FC = () => {
               content: '<p> Example Text </p>', 
               editorProps: {
                 attributes: {
-                  class: "bg-dark-gray-500", 
+                  class: "h-lvh80 bg-oklch-500", 
                 }
               },
               autofocus: true, 
@@ -31,7 +32,7 @@ const TipTap: React.FC = () => {
       }
   }, []); 
   return (
-    <div>
+    <div >
         <MenuBar editor={editor} />
         <div ref={editorContainerRef}></div>
     </div>

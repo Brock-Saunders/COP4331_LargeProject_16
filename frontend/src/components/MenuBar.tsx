@@ -101,7 +101,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ editor }) => {
   ];
 
   return (
-    <div className="border rounded-md p-1 mb-1 bg-dark-gray-50 space-x-2 z-50">
+    <div className="fixedborder rounded-md p-1 mb-1 bg-dark-gray-50 space-x-2 z-50">
       <div className="button-group flex flex-wrap gap-1">
         {actions.map((action, index) => {
           const Icon = action.icon;
