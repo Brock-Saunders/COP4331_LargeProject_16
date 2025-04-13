@@ -13,7 +13,7 @@ const DocumentList: React.FC = () => {
     // // Fetch documents from an API or local storage
     // async function fetchDocuments() {
     //   try {
-    //     const response = await fetch('http://localhost:5000/api/documents'); // Replace with your API endpoint
+    //     const response = await fetch('http://localhost:5000/api/documents'); // Replace with API endpoint
     //     const data = await response.json();
     //     setDocuments(data);
     //   } catch (error) {

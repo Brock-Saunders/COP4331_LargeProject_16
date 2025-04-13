@@ -1,26 +1,27 @@
-import Homebar from "../components/HomeBar";
+import Homebar from "../components/HomeBar"; // Make sure this matches the actual filename
 import DocumentList from "../components/DocumentList";
 
-const CardPage = () => {
-    const username = "JohnDoe"; // Replace with dynamic username
+const HomePage = () => {
+    const username = "JohnDoe";
     const handleLogout = () => {
         console.log("User logged out");
-        // Add logout logic here
     };
     const handleCreateNewDocument = () => {
         console.log("Create new document clicked");
-        // Add logic to create a new document here
     };
-
+    
     return (
-        <div>
+        <div className="min-h-screen bg-gray-100">
             <Homebar
-                username = {username}
-                onLogout = {handleLogout}
-                onCreateNewDocument = {handleCreateNewDocument}
+                username={username}
+                onLogout={handleLogout}
+                onCreateNewDocument={handleCreateNewDocument}
             />
-            <DocumentList />
+            <div className="pt-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <DocumentList />
+            </div>
         </div>
     );
 }
-export default CardPage;
+
+export default HomePage;

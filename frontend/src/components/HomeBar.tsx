@@ -6,28 +6,24 @@ interface HomebarProps {
   onCreateNewDocument: () => void;
 }
 
-const Homebar: React.FC<HomebarProps> = ({ username, onLogout, onCreateNewDocument }) => {
+const Homebar:React.FC<HomebarProps> = ({ username, onLogout, onCreateNewDocument }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
-  };
-
+  
   return (
-    <nav className="bg-blue-600 p-4 w-full fixed top-0 z-50 shadow">
-      <div className="max-w-7xl mx-auto flex flex-row justify-between items-center px-4">
+    <nav className="bg-blue-600 p-4 w-full fixed top-0 left-0 right-0 z-50 shadow">
+      <div className="container mx-auto flex justify-between items-center">
         <div className="text-white text-xl font-bold">Text Editor</div>
-        <div className="flex flex-row items-center space-x-4">
+        <div className="flex items-center space-x-4">
           <button
             onClick={onCreateNewDocument}
-            className="bg-white text-blue-600 px-4 py-2 rounded hover:bg-gray-100 transition whitespace-nowrap"
+            className="bg-white text-blue-600 px-4 py-2 rounded hover:bg-gray-100 transition"
           >
             Create New Document
           </button>
           <div className="relative">
             <button
-              onClick={toggleDropdown}
-              className="bg-white text-blue-600 px-4 py-2 rounded hover:bg-gray-100 transition whitespace-nowrap"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="bg-white text-blue-600 px-4 py-2 rounded hover:bg-gray-100 transition"
             >
               {username}
             </button>
