@@ -103,12 +103,15 @@ app.post('/api/users/login', async (req, res, next) => {
     res.status(200).json(ret);
 });
 
-
-// POST /api/users/logout
-
-
 // DOCUMENT API ENDPOINTS:
 // GET /api/documents
+app.get('/api/documents', async (req, res, next) => {
+    // incoming: userId
+    // outgoing: documents[], error
+
+    // optional: implement sorting by different values
+
+});
 
 // POST /api/documents
 app.post('/api/documents', async (req, res, next) => {
@@ -172,8 +175,10 @@ app.get('/api/documents/:id', async (req, res, next) => {
             content: result.content,
             createdAt: result.createdAt,
             updatedAt: result.updatedAt,
-            error: ""
+            error: error
         };
+    } else if (error === ""){
+        return res.status(404).json({ error: 'Document not found' });
     }
 
     ret.error = error;
@@ -246,6 +251,13 @@ app.delete('/api/documents/:id', async (req, res, next) => {
 });
 
 // GET /api/documents/search?q=searchTerm
+app.get('/api/documents/search?q=searchTerm', async (req, res, next) => {
+    // incoming: userId, searchTerm
+    // outgoing: documents[], error
+
+    // optional: implement sorting by different values
+
+});
 
 
 // OLD CARDS LAB API ENDPOINTS
