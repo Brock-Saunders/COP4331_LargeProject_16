@@ -4,6 +4,8 @@ import DocumentList from "../components/DocumentList";
 const HomePage = () => {
     const username = "JohnDoe";
     const handleLogout = () => {
+        localStorage.clear();
+        window.location.href = '/';
         console.log("User logged out");
     };
     const handleCreateNewDocument = () => {

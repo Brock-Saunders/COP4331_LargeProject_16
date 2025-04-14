@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FaChevronDown } from 'react-icons/fa';
 
 interface HomebarProps {
   username: string;
@@ -13,6 +14,15 @@ const Homebar:React.FC<HomebarProps> = ({ username, onLogout, onCreateNewDocumen
     <nav className="bg-blue-600 p-4 w-full fixed top-0 left-0 right-0 z-50 shadow">
       <div className="container mx-auto flex justify-between items-center">
         <div className="text-white text-xl font-bold">Text Editor</div>
+
+        <div className="flex-grow mx-8">
+          <input
+            type="text"
+            placeholder="Search..."
+            className="bg-white text-blue-600 w-full px-4 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
         <div className="flex items-center space-x-4">
           <button
             onClick={onCreateNewDocument}
@@ -23,9 +33,12 @@ const Homebar:React.FC<HomebarProps> = ({ username, onLogout, onCreateNewDocumen
           <div className="relative">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="bg-white text-blue-600 px-4 py-2 rounded hover:bg-gray-100 transition"
+              className="bg-white text-blue-600 px-4 py-2 rounded hover:bg-gray-100 transition flex items-center"
             >
-              {username}
+              <span>{username}</span>
+              <span className={`ml-2 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}>
+                <FaChevronDown />
+              </span>
             </button>
             {dropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
