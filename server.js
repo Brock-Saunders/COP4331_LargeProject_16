@@ -216,6 +216,34 @@ app.put('/api/documents/:id', async (req, res, next) => {
 });
 
 // DELETE /api/documents/:id
+app.delete('/api/documents/:id', async (req, res, next) => {
+    // incoming: userId, documentId
+    // outgoing: error
+
+    const userId = req.body.userId;
+    const documentId = req.params.id;
+
+    var query = {
+        _id: new ObjectId(documentId.toString()),
+        userId: userId
+    };
+    console.log("docId: "+query._id);
+    console.log("userId: "+query.userId);
+    var result = '';
+    var error = '';
+
+    try {
+        const db = client.db();
+        result = await db.collection('Documents').deleteOne(query)
+        console.log("document retrieved: "+result)
+    }
+    catch (e) {
+        error = e.toString();
+    }
+
+    var ret = { error: error };
+    res.status(200).json(ret);
+});
 
 // GET /api/documents/search?q=searchTerm
 
