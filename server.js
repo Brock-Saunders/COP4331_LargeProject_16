@@ -44,8 +44,6 @@ app.listen(5600); // start Node + Express server on port 5000
 
 // DELETE /api/documents/:id
 
-
-// OPTIONAL SEARCH API ENDPOINTS:
 // GET /api/documents/search?q=searchTerm
 
 
