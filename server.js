@@ -117,8 +117,6 @@ app.post('/api/users/login', async (req, res, next) => {
 
 // DELETE /api/documents/:id
 
-
-// OPTIONAL SEARCH API ENDPOINTS:
 // GET /api/documents/search?q=searchTerm
 
 
