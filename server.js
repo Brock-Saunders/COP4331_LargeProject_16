@@ -1,10 +1,11 @@
 const dotenv = require('dotenv').config();
 // DATABASE SETUP / CONNECTION
-//const MongoClient = require('mongodb').MongoClient;
+const MongoClient = require('mongodb').MongoClient;
 const url = process.env.MONGO_DB_CONNECTION_STRING;
-//const client = new MongoClient(url);
-//client.connect();
+const client = new MongoClient(url);
+client.connect();
 console.log(url)
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -23,7 +24,6 @@ app.use((req, res, next) => {
     );
     next();
 });
-app.listen(5600); // start Node + Express server on port 5000
 
 // USER API ENDPOINTS:
 
@@ -110,6 +110,33 @@ app.post('/api/users/login', async (req, res, next) => {
 // GET /api/documents
 
 // POST /api/documents
+app.post('/api/documents', async (req, res, next) => {
+    // incoming: userId, title, content
+    // outgoing: documentId, error
+    const { userId, title, content} = req.body;
+
+    // create new user
+    const newDocument = {
+        userId: userId,
+        title: title,
+        content: content,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    };
+
+    var id = '';
+    var error = '';
+    try {
+        const db = client.db();
+        const result = await db.collection('Documents').insertOne(newDocument);
+        console.log(result);
+        id = result.insertedId.toString();
+    } catch (e) {
+        error = e.toString();
+    }
+    var ret = { documentId:id, error: error };
+    res.status(200).json(ret);
+});
 
 // GET /api/documents/:id
 
@@ -154,3 +181,5 @@ app.post('/api/searchcards', async (req, res, next) => {
     var ret = { results: _ret, error: error };
     res.status(200).json(ret);
 });
+
+app.listen(5600); // start Node + Express server on port 5000
