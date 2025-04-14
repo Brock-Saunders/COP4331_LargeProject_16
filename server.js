@@ -4,11 +4,12 @@ const MongoClient = require('mongodb').MongoClient;
 const url = process.env.MONGO_DB_CONNECTION_STRING;
 const client = new MongoClient(url);
 client.connect();
-console.log(url)
+console.log("mongodb connection string: "+url)
 
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const { ObjectId } = require('mongodb');
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
@@ -69,7 +70,7 @@ app.post('/api/users/register', async (req, res, next) => {
     try {
         const db = client.db();
         const result = await db.collection('Users').insertOne(newUser);
-        console.log(result);
+        console.log("user registered: "+result);
     } catch (e) {
         error = e.toString();
     }
@@ -129,7 +130,7 @@ app.post('/api/documents', async (req, res, next) => {
     try {
         const db = client.db();
         const result = await db.collection('Documents').insertOne(newDocument);
-        console.log(result);
+        console.log("document created: "+result);
         id = result.insertedId.toString();
     } catch (e) {
         error = e.toString();
@@ -139,6 +140,47 @@ app.post('/api/documents', async (req, res, next) => {
 });
 
 // GET /api/documents/:id
+app.get('/api/documents/:id', async (req, res, next) => {
+    // incoming: userId, documentId
+    // outgoing: title, content, createdAt, updatedAt, error
+
+    const userId = req.body.userId;
+    const documentId = req.params.id;
+
+    var query = {
+        _id: new ObjectId(documentId.toString()),
+        userId: userId
+    };
+    console.log("docId: "+query._id);
+    console.log("userId: "+query.userId);
+    var result = '';
+    var error = '';
+    var ret = {error:""}
+
+    try {
+        const db = client.db();
+        result = await db.collection('Documents').findOne(query)
+        console.log("document retrieved: "+result)
+    }
+    catch (e) {
+        // implement more robust error handling?
+        error = e.toString();
+    }
+
+    if (result != null){
+        ret = {
+            title: result.title,
+            content: result.content,
+            createdAt: result.createdAt,
+            updatedAt: result.updatedAt,
+            error: ""
+        };
+    }
+
+    ret.error = error;
+    res.status(200).json(ret);
+
+});
 
 // PUT /api/documents/:id
 
