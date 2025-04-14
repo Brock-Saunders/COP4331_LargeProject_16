@@ -163,7 +163,6 @@ app.get('/api/documents/:id', async (req, res, next) => {
         console.log("document retrieved: "+result)
     }
     catch (e) {
-        // implement more robust error handling?
         error = e.toString();
     }
 
@@ -179,10 +178,42 @@ app.get('/api/documents/:id', async (req, res, next) => {
 
     ret.error = error;
     res.status(200).json(ret);
-
 });
 
 // PUT /api/documents/:id
+app.put('/api/documents/:id', async (req, res, next) => {
+    // incoming: userId, documentId, title, content
+    // outgoing: error
+
+    const { userId, title, content } = req.body;
+    const documentId = req.params.id;
+
+    var filter = {
+        _id: new ObjectId(documentId.toString()),
+        userId: userId
+    };
+    var update = {
+        $set: {
+            title: title,
+            content: content,
+            updatedAt: new Date()
+        }
+    }
+    var result = '';
+    var error = '';
+
+    try {
+        const db = client.db();
+        result = await db.collection('Documents').updateOne(filter, update)
+        console.log("document updated?: "+result.modifiedCount)
+    }
+    catch (e) {
+        error = e.toString();
+    }
+    
+    var ret = { error: error };
+    res.status(200).json(ret);
+});
 
 // DELETE /api/documents/:id
 
