@@ -26,7 +26,54 @@ app.use((req, res, next) => {
 app.listen(5600); // start Node + Express server on port 5000
 
 // USER API ENDPOINTS:
+
 // POST /api/users/register
+app.post('/api/users/register', async (req, res, next) => {
+    // incoming: login, password, firstName, lastName, email
+    // outgoing: error
+    const { login, password, firstName, lastName, email } = req.body;
+
+    // check if email is formatted correctly
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        return res.status(200).json({ error: 'Invalid email format' });
+    }
+
+    // check if email already taken
+    const db = client.db();
+    const echeck = db.collection('Users').find({ Email: email }).toArray();
+    if (echeck.length > 0) {
+        return res.status(200).json({ error: 'Email already taken' });
+    }
+
+    // check if login already taken
+    const lcheck = db.collection('Users').find({ Login: login }).toArray();
+    if (lcheck.length > 0) {
+        return res.status(200).json({ error: 'Login already taken' });
+    }
+
+    // HASH PASSWORD HERE ?
+    const hashedPassword = password; // Replace with actual hashing logic?
+
+    // create new user
+    const newUser = {
+        Login: login,
+        Password: hashedPassword,
+        FirstName: firstName,
+        LastName: lastName,
+        Email: email
+    };
+    var error = '';
+    try {
+        const db = client.db();
+        const result = await db.collection('Users').insertOne(newUser);
+        console.log(result);
+    } catch (e) {
+        error = e.toString();
+    }
+    var ret = { error: error };
+    res.status(200).json(ret);
+});
 
 // POST /api/users/login
 
