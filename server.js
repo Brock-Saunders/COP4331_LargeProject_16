@@ -103,12 +103,15 @@ app.post('/api/users/login', async (req, res, next) => {
     res.status(200).json(ret);
 });
 
-
-// POST /api/users/logout
-
-
 // DOCUMENT API ENDPOINTS:
 // GET /api/documents
+app.get('/api/documents', async (req, res, next) => {
+    // incoming: userId
+    // outgoing: documents[], error
+
+    // optional: implement sorting by different values
+
+});
 
 // POST /api/documents
 app.post('/api/documents', async (req, res, next) => {
@@ -163,7 +166,6 @@ app.get('/api/documents/:id', async (req, res, next) => {
         console.log("document retrieved: "+result)
     }
     catch (e) {
-        // implement more robust error handling?
         error = e.toString();
     }
 
@@ -173,20 +175,89 @@ app.get('/api/documents/:id', async (req, res, next) => {
             content: result.content,
             createdAt: result.createdAt,
             updatedAt: result.updatedAt,
-            error: ""
+            error: error
         };
+    } else if (error === ""){
+        return res.status(404).json({ error: 'Document not found' });
     }
 
     ret.error = error;
     res.status(200).json(ret);
-
 });
 
 // PUT /api/documents/:id
+app.put('/api/documents/:id', async (req, res, next) => {
+    // incoming: userId, documentId, title, content
+    // outgoing: error
+
+    const { userId, title, content } = req.body;
+    const documentId = req.params.id;
+
+    var filter = {
+        _id: new ObjectId(documentId.toString()),
+        userId: userId
+    };
+    var update = {
+        $set: {
+            title: title,
+            content: content,
+            updatedAt: new Date()
+        }
+    }
+    var result = '';
+    var error = '';
+
+    try {
+        const db = client.db();
+        result = await db.collection('Documents').updateOne(filter, update)
+        console.log("document updated?: "+result.modifiedCount)
+    }
+    catch (e) {
+        error = e.toString();
+    }
+    
+    var ret = { error: error };
+    res.status(200).json(ret);
+});
 
 // DELETE /api/documents/:id
+app.delete('/api/documents/:id', async (req, res, next) => {
+    // incoming: userId, documentId
+    // outgoing: error
+
+    const userId = req.body.userId;
+    const documentId = req.params.id;
+
+    var query = {
+        _id: new ObjectId(documentId.toString()),
+        userId: userId
+    };
+    console.log("docId: "+query._id);
+    console.log("userId: "+query.userId);
+    var result = '';
+    var error = '';
+
+    try {
+        const db = client.db();
+        result = await db.collection('Documents').deleteOne(query)
+        console.log("document retrieved: "+result)
+    }
+    catch (e) {
+        error = e.toString();
+    }
+
+    var ret = { error: error };
+    res.status(200).json(ret);
+});
 
 // GET /api/documents/search?q=searchTerm
+app.get('/api/documents/search?q=searchTerm', async (req, res, next) => {
+    // incoming: userId, searchTerm
+    // outgoing: documents[], error
+
+    // optional: implement sorting by different values
+
+});
 
 
 // OLD CARDS LAB API ENDPOINTS
