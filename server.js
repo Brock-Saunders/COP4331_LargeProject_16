@@ -29,6 +29,7 @@ app.use((req, res, next) => {
 // USER API ENDPOINTS:
 
 // POST /api/users/register
+// register user | WORKING POSTMAN
 app.post('/api/users/register', async (req, res, next) => {
     // incoming: login, password, firstName, lastName, email
     // outgoing: error
@@ -79,6 +80,7 @@ app.post('/api/users/register', async (req, res, next) => {
 });
 
 // POST /api/users/login
+// login user | WORKING POSTMAN
 app.post('/api/users/login', async (req, res, next) => {
     // incoming: login, password
     // outgoing: id, firstName, lastName, error
@@ -105,18 +107,18 @@ app.post('/api/users/login', async (req, res, next) => {
 
 // DOCUMENT API ENDPOINTS:
 // GET /api/documents
-// Display documents
+// Display all documents | WORKING POSTMAN
 app.get('/api/documents', async (req, res, next) => {
     // incoming: userId
     const userId = req.query.userId;
-    
+
     var error = '';
     // What is to be exported
     var documents = [];
 
     // No username provided
     if (!userId) {
-        return res.status(400).json({error: 'Missing userId parameter'});
+        return res.status(400).json({ error: 'Missing userId parameter' });
     }
 
     // outgoing: documents[], error
@@ -124,15 +126,16 @@ app.get('/api/documents', async (req, res, next) => {
         // Gets database connection
         const db = client.db();
         // Gets the documents, sorting by most recently updated, and turns it into an array
-        documents = await db.collection('Documents').find({userId: userId}).sort({updatedAt: -1}).toArray();
+        documents = await db.collection('Documents').find({ userId: userId }).sort({ updatedAt: -1 }).toArray();
     } catch (e) {
         error = e.toString();
     }
 
-    return res.status(200).json({documents, error});
+    return res.status(200).json({ documents, error });
 });
 
 // POST /api/documents
+// Create new document | working postman
 app.post('/api/documents', async (req, res, next) => {
     // incoming: userId, title, content
     // outgoing: documentId, error
@@ -162,6 +165,7 @@ app.post('/api/documents', async (req, res, next) => {
 });
 
 // GET /api/documents/:id
+// GET SPECIFIC DOCUMENT | CRASHING POSTMAN
 app.get('/api/documents/:id', async (req, res, next) => {
     // incoming: userId, documentId
     // outgoing: title, content, createdAt, updatedAt, error
@@ -169,10 +173,15 @@ app.get('/api/documents/:id', async (req, res, next) => {
     const userId = req.body.userId;
     const documentId = req.params.id;
 
+    if (!/^[a-f\d]{24}$/i.test(documentId)) {
+        return res.status(400).json({ error: 'Invalid document ID format' });
+    }
+
     var query = {
         _id: new ObjectId(documentId.toString()),
         userId: userId
     };
+
     console.log("docId: " + query._id);
     console.log("userId: " + query.userId);
     var result = '';
@@ -205,6 +214,7 @@ app.get('/api/documents/:id', async (req, res, next) => {
 });
 
 // PUT /api/documents/:id
+// Update document | CRASHING POSTMAN
 app.put('/api/documents/:id', async (req, res, next) => {
     // incoming: userId, documentId, title, content
     // outgoing: error
@@ -240,6 +250,7 @@ app.put('/api/documents/:id', async (req, res, next) => {
 });
 
 // DELETE /api/documents/:id
+// Delete document | CRASHING POSTMAN
 app.delete('/api/documents/:id', async (req, res, next) => {
     // incoming: userId, documentId
     // outgoing: error
@@ -270,7 +281,7 @@ app.delete('/api/documents/:id', async (req, res, next) => {
 });
 
 // GET /api/documents/search?q=searchTerm
-// displays searched documents
+// displays searched documents | crashing postman
 app.get('/api/documents/search', async (req, res, next) => {
     // incoming: userId, searchTerm
     const userId = req.query.userId;
@@ -286,15 +297,15 @@ app.get('/api/documents/search', async (req, res, next) => {
 
         // Retrieves documents by search and converts to array, sorted by most recently updated
         documents = await db.collection('Documents')
-        .find({
-            userId: userId,
-            $or: [
-                {title: {$regex: searchTerm, $options: 'i'}},
-                {content: {$regex: searchTerm, $options: 'i'}}
-            ]
-         })
-        .sort({ updatedAt: -1 })
-        .toArray();
+            .find({
+                userId: userId,
+                $or: [
+                    { title: { $regex: searchTerm, $options: 'i' } },
+                    { content: { $regex: searchTerm, $options: 'i' } }
+                ]
+            })
+            .sort({ updatedAt: -1 })
+            .toArray();
     } catch (e) {
         error = e.toString();
     }
