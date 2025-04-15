@@ -122,8 +122,9 @@ app.post('/api/users/login', async (req, res, next) => {
     var id = user._id
     var fn = user.firstName;
     var ln = user.lastName;
+    var username = user.login;
 
-    var ret = { id: id, firstName: fn, lastName: ln, error: error };
+    var ret = { id: id, firstName: fn, lastName: ln, login: username, error: error };
     res.status(200).json(ret);
 });
 
@@ -157,20 +158,17 @@ app.get('/api/users/username', async (req, res, next) => {
 // DOCUMENT API ENDPOINTS:
 
 // GET /api/documents
-// Display all documents | WORKING POSTMAN
+// Display all documents
 app.get('/api/documents', async (req, res, next) => {
-    // incoming: userId
-    const { userId } = req.body;
-
+    // Get userId from query parameter instead of body
+    const { userId } = req.query;
     var error = '';
     // What is to be exported
     var documents = [];
-
     // No username provided
     if (!userId) {
         return res.status(400).json({ error: 'Missing userId parameter' });
     }
-
     // outgoing: documents[], error
     try {
         // Gets database connection
@@ -180,7 +178,6 @@ app.get('/api/documents', async (req, res, next) => {
     } catch (e) {
         error = e.toString();
     }
-
     return res.status(200).json({ documents, error });
 });
 

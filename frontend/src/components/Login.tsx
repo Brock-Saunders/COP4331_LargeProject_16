@@ -58,6 +58,7 @@ function Login({ onLogin }: LoginProps) {
       firstName: res.firstName,
       lastName: res.lastName,
       id: res.id,
+      login: res.login,
     };
     localStorage.setItem('user_data', JSON.stringify(user));
     setMessage('');
@@ -66,7 +67,7 @@ function Login({ onLogin }: LoginProps) {
     alert(error.toString());
     return;
   }
-}
+} 
 
   return (
     <div className="login-wrapper">
