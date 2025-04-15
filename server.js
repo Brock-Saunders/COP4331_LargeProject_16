@@ -105,12 +105,31 @@ app.post('/api/users/login', async (req, res, next) => {
 
 // DOCUMENT API ENDPOINTS:
 // GET /api/documents
+// Display documents
 app.get('/api/documents', async (req, res, next) => {
     // incoming: userId
+    const userId = req.query.userId;
+    
+    var error = '';
+    // What is to be exported
+    var documents = [];
+
+    // No username provided
+    if (!userId) {
+        return res.status(400).json({error: 'Missing userId parameter'});
+    }
+
     // outgoing: documents[], error
-
-    // optional: implement sorting by different values
-
+    try {
+        // Gets database connection
+        const db = client.db();
+        // Gets the documents, sorting by most recently updated, and turns it into an array
+        documents = await db.collection('Documents').find({userId: userId}).sort({updatedAt: -1}).toArray();
+    } catch (e) {
+        error = e.toString();
+    }
+    
+    return res.status(200).json({documents, error});
 });
 
 // POST /api/documents
