@@ -1,4 +1,5 @@
 const dotenv = require('dotenv').config();
+const bcrypt = require('bcrypt');
 // DATABASE SETUP / CONNECTION
 const MongoClient = require('mongodb').MongoClient;
 const url = process.env.MONGO_DB_CONNECTION_STRING;
@@ -25,6 +26,19 @@ app.use((req, res, next) => {
     );
     next();
 });
+
+// hashing functions
+async function hashPassword(password) {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    return hashedPassword;
+}
+
+async function comparePassword(password, hashedPassword) {
+    const match = await bcrypt.compare(password, hashedPassword);
+    return match;
+}
+
 
 // USER API ENDPOINTS:
 
@@ -54,8 +68,9 @@ app.post('/api/users/register', async (req, res, next) => {
         return res.status(200).json({ error: 'Login already taken' });
     }
 
-    // HASH PASSWORD HERE ?
-    const hashedPassword = password; // Replace with actual hashing logic?
+    // HASH PASSWORD
+    const hashedPassword = await hashPassword(password);
+    console.log("hashed password: " + hashedPassword);
 
     // create new user
     const newUser = {
@@ -84,23 +99,28 @@ app.post('/api/users/register', async (req, res, next) => {
 app.post('/api/users/login', async (req, res, next) => {
     // incoming: login, password
     // outgoing: id, firstName, lastName, error
+    var id = -1;
+    var firstName = '';
+    var lastName = '';
     var error = '';
     const { login, password } = req.body;
 
-    // hash password here ?
-    const hashedPassword = password; // Replace with actual hashing logic?
-
     const db = client.db();
-    const results = await
-        db.collection('Users').find({ login: login, password: hashedPassword }).toArray();
-    var id = -1;
-    var fn = '';
-    var ln = '';
-    if (results.length > 0) {
-        id = results[0]._id;
-        fn = results[0].firstName;
-        ln = results[0].lastName;
+    const user = await db.collection('Users').findOne({ Login: login });
+    if (!user) {
+        return res.status(200).json({ error: 'User not found' });
     }
+
+    const match = await comparePassword(password, user.password);
+    if (!match) {
+        return res.status(200).json({ error: 'Invalid password' });
+    }
+    console.log("user logged in: " + user.Login);
+
+    var id = user._id
+    var fn = user.firstName;
+    var ln = user.lastName;
+
     var ret = { id: id, firstName: fn, lastName: ln, error: error };
     res.status(200).json(ret);
 });
