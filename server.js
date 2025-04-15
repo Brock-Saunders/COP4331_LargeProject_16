@@ -372,5 +372,32 @@ app.delete('/api/documents/:id', async (req, res, next) => {
     res.status(200).json(ret);
 });
 
+// GET /api/users/username
+// Retrieve username (login) by userId
+app.get('/api/users/username', async (req, res, next) => {
+    const userId = req.query.userId;
+
+    if (!userId) {
+        return res.status(400).json({ error: 'Missing userId parameter' });
+    }
+
+    if (!/^[a-f\d]{24}$/i.test(userId)) {
+        return res.status(400).json({ error: 'Invalid userId format' });
+    }
+
+    try {
+        const db = client.db();
+        const user = await db.collection('Users').findOne({ _id: new ObjectId(userId) });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.status(200).json({ username: user.login }); // Return the login field as username
+    } catch (error) {
+        res.status(500).json({ error: error.toString() });
+    }
+});
+
 
 app.listen(5000); // start Node + Express server on port 5000
