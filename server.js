@@ -132,7 +132,7 @@ app.post('/api/users/login', async (req, res, next) => {
 // Display all documents | WORKING POSTMAN
 app.get('/api/documents', async (req, res, next) => {
     // incoming: userId
-    const userId = req.query.userId;
+    const { userId } = req.body;
 
     var error = '';
     // What is to be exported
@@ -210,8 +210,7 @@ app.get('/api/documents/search', async (req, res, next) => {
 
     console.log("TRYING SEARCH DOCUMENTS");
 
-    const userId = req.query.userId;
-    const searchTerm = req.query.q;
+    const { userId, searchTerm } = req.body;
 
     let error = '';
     let documents = [];
@@ -247,8 +246,7 @@ app.get('/api/documents/:id', async (req, res, next) => {
 
     console.log("TRYING GET DOCUMENT");
 
-    const userId = req.query.userId;
-    const documentId = req.params.id;
+    const { userId, documentId } = req.body;
 
     if (!/^[a-f\d]{24}$/i.test(documentId)) {
         return res.status(400).json({ error: 'Invalid document ID format' });
@@ -298,8 +296,7 @@ app.put('/api/documents/:id', async (req, res, next) => {
 
     console.log("TRYING UPDATE DOCUMENT");
 
-    const { userId, title, content } = req.body;
-    const documentId = req.params.id;
+    const { userId, documentId, title, content } = req.body;
 
     console.log("docId: " + documentId);
     console.log("userId: " + userId);
@@ -343,8 +340,7 @@ app.delete('/api/documents/:id', async (req, res, next) => {
 
     console.log("TRYING DELETE DOCUMENT");
 
-    const userId = req.body.userId;
-    const documentId = req.params.id;
+    const { userId, documentId } = req.body;
 
     if (!/^[a-f\d]{24}$/i.test(documentId)) {
         return res.status(400).json({ error: 'Invalid document ID format' });
@@ -375,7 +371,7 @@ app.delete('/api/documents/:id', async (req, res, next) => {
 // GET /api/users/username
 // Retrieve username (login) by userId
 app.get('/api/users/username', async (req, res, next) => {
-    const userId = req.query.userId;
+    const { userId } = req.body;
 
     if (!userId) {
         return res.status(400).json({ error: 'Missing userId parameter' });
