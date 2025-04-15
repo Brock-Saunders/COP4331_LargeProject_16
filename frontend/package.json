@@ -12,15 +12,12 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-<<<<<<< HEAD
     "@tailwindcss/postcss": "^4.1.4",
-=======
     "@heroui/react": "^2.7.6",
     "@jest/globals": "^29.7.0",
     "@tiptap/pm": "^2.11.7",
     "@tiptap/react": "^2.11.7",
     "@tiptap/starter-kit": "^2.11.7",
->>>>>>> 04ffc195a37df61fcabae6f1bd24a67188b75b86
     "frontend": "file:",
     "lucide-react": "^0.488.0",
     "react": "^19.0.0",
