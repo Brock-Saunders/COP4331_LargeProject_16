@@ -128,7 +128,7 @@ app.get('/api/documents', async (req, res, next) => {
     } catch (e) {
         error = e.toString();
     }
-    
+
     return res.status(200).json({documents, error});
 });
 
@@ -270,12 +270,36 @@ app.delete('/api/documents/:id', async (req, res, next) => {
 });
 
 // GET /api/documents/search?q=searchTerm
-app.get('/api/documents/search?q=searchTerm', async (req, res, next) => {
+// displays searched documents
+app.get('/api/documents/search', async (req, res, next) => {
     // incoming: userId, searchTerm
+    const userId = req.query.userId;
+    const searchTerm = req.query.q;
+
+    let error = '';
+    let documents = [];
+
     // outgoing: documents[], error
+    try {
+        // Gets DB connection
+        const db = client.db();
 
-    // optional: implement sorting by different values
+        // Retrieves documents by search and converts to array, sorted by most recently updated
+        documents = await db.collection('Documents')
+        .find({
+            userId: userId,
+            $or: [
+                {title: {$regex: searchTerm, $options: 'i'}},
+                {content: {$regex: searchTerm, $options: 'i'}}
+            ]
+         })
+        .sort({ updatedAt: -1 })
+        .toArray();
+    } catch (e) {
+        error = e.toString();
+    }
 
+    return res.status(200).json({ documents, error });
 });
 
 
