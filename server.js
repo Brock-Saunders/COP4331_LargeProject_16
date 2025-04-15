@@ -167,9 +167,9 @@ app.post('/api/documents', async (req, res, next) => {
     res.status(200).json(ret);
 });
 
-// GET /api/documents/search?q=searchTerm
+// GET /api/documents/search
 // displays searched documents | working postman
-app.get('/api/documents/search?q=searchTerm', async (req, res, next) => {
+app.get('/api/documents/search', async (req, res, next) => {
     // incoming: userId, searchTerm
     // outgoing: documents[], error
 
@@ -337,41 +337,5 @@ app.delete('/api/documents/:id', async (req, res, next) => {
     res.status(200).json(ret);
 });
 
-// GET /api/documents/search?q=searchTerm
-// displays searched documents | working postman
-app.get('/api/documents/search?q=searchTerm', async (req, res, next) => {
-    // incoming: userId, searchTerm
-    // outgoing: documents[], error
-
-    console.log("TRYING SEARCH DOCUMENTS");
-
-    const userId = req.query.userId;
-    const searchTerm = req.query.q;
-
-    let error = '';
-    let documents = [];
-
-    // outgoing: documents[], error
-    try {
-        // Gets DB connection
-        const db = client.db();
-
-        // Retrieves documents by search and converts to array, sorted by most recently updated
-        documents = await db.collection('Documents')
-            .find({
-                userId: userId,
-                $or: [
-                    { title: { $regex: searchTerm, $options: 'i' } },
-                    { content: { $regex: searchTerm, $options: 'i' } }
-                ]
-            })
-            .sort({ updatedAt: -1 })
-            .toArray();
-    } catch (e) {
-        error = e.toString();
-    }
-
-    return res.status(200).json({ documents, error });
-});
 
 app.listen(5000); // start Node + Express server on port 5000
