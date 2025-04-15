@@ -139,6 +139,9 @@ app.get('/api/documents', async (req, res, next) => {
 app.post('/api/documents', async (req, res, next) => {
     // incoming: userId, title, content
     // outgoing: documentId, error
+
+    console.log("TRYING CREATE DOCUMENT");
+
     const { userId, title, content } = req.body;
 
     // create new user
@@ -165,10 +168,12 @@ app.post('/api/documents', async (req, res, next) => {
 });
 
 // GET /api/documents/:id
-// GET SPECIFIC DOCUMENT | CRASHING POSTMAN
+// GET SPECIFIC DOCUMENT | WORKING POSTMAN
 app.get('/api/documents/:id', async (req, res, next) => {
     // incoming: userId, documentId
     // outgoing: title, content, createdAt, updatedAt, error
+
+    console.log("TRYING GET DOCUMENT");
 
     const userId = req.query.userId;
     const documentId = req.params.id;
@@ -219,6 +224,8 @@ app.put('/api/documents/:id', async (req, res, next) => {
     // incoming: userId, documentId, title, content
     // outgoing: error
 
+    console.log("TRYING UPDATE DOCUMENT");
+
     const { userId, title, content } = req.body;
     const documentId = req.params.id;
 
@@ -254,10 +261,12 @@ app.put('/api/documents/:id', async (req, res, next) => {
 });
 
 // DELETE /api/documents/:id
-// Delete document | CRASHING POSTMAN
+// Delete document | WORKING POSTMAN
 app.delete('/api/documents/:id', async (req, res, next) => {
     // incoming: userId, documentId
     // outgoing: error
+
+    console.log("TRYING DELETE DOCUMENT");
 
     const userId = req.body.userId;
     const documentId = req.params.id;
@@ -292,6 +301,10 @@ app.delete('/api/documents/:id', async (req, res, next) => {
 // displays searched documents | crashing postman
 app.get('/api/documents/search', async (req, res, next) => {
     // incoming: userId, searchTerm
+    // outgoing: documents[], error
+
+    console.log("TRYING SEARCH DOCUMENTS");
+
     const userId = req.query.userId;
     const searchTerm = req.query.q;
 
