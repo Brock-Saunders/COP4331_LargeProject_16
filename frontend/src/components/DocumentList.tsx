@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface Document {
   id: string;
   title: string;
   description: string;
   updatedAt: string;
-  // Add other fields that might be returned from your API
 }
 
 const DocumentList: React.FC = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -66,12 +67,17 @@ const DocumentList: React.FC = () => {
     return <div className="p-4 text-center">No documents found.</div>;
   }
 
+  const handleCardClick = (docId: string) => {
+    navigate(`/documents/${docId}`); // Navigate to the document editor page
+  };
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4" style={{ backgroundColor: '#1f1f1f' }}>
       {documents.map((doc) => (
         <div
           key={doc.id}
           className="bg-gradient-to-br from-gray-400 to-gray-300 text-black shadow-md rounded-lg p-4 hover:shadow-lg transition"
+          onClick={() => handleCardClick(doc.id)} //navaigate to document on card click
         >
           <h3 className="text-lg font-bold">{doc.title}</h3>
           <p className="text-gray-700">{doc.description}</p>
