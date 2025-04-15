@@ -301,7 +301,7 @@ app.get('/api/documents/search', async (req, res, next) => {
 
     return res.status(200).json({ documents, error });
 });
-// Test
+
 
 
 // OLD CARDS LAB API ENDPOINTS
