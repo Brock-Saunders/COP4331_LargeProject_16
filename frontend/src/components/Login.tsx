@@ -64,8 +64,7 @@ function Login({ onLogin }: LoginProps) {
         <div className="login-left">
           <div className="login-form">
             <h1 className="login-title">
-            Online<br />
-            Text-Editor
+            Notes App
             </h1>
           <p className="login-subtitle">Login to your account!</p>
          
