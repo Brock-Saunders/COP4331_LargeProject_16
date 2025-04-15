@@ -83,14 +83,16 @@ app.post('/api/users/register', async (req, res, next) => {
         updatedAt: new Date(),
     };
     var error = '';
+    var userId = -1;
     try {
         const db = client.db();
         const result = await db.collection('Users').insertOne(newUser);
-        console.log("user registered: " + result);
+        userId = result.insertedId.toString();
+        console.log("user created: " + userId);
     } catch (e) {
         error = e.toString();
     }
-    var ret = { error: error };
+    var ret = { userId: userId, error: error };
     res.status(200).json(ret);
 });
 

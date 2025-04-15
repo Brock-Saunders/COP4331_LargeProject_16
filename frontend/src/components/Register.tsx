@@ -10,7 +10,7 @@ function Register() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  function handleRegister(e: React.FormEvent) {
+  async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
 
     if (!username || !password || !confirmPassword) {
@@ -20,6 +20,28 @@ function Register() {
 
     if (password !== confirmPassword) {
       setMessage('Passwords do not match.');
+      return;
+    }
+
+    const obj = { login: username, password: password };
+    const js = JSON.stringify(obj);
+
+    const url = 'http://localhost:5000/api/users/register'; // Change to domain
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        body: js,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const res = JSON.parse(await response.text());
+      console.log('Register API response:', res);
+
+    } catch (error) {
+      console.error('Error during registration:', error);
+      setMessage('An error occurred. Please try again later.');
       return;
     }
 
