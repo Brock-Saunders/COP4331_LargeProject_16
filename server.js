@@ -170,8 +170,7 @@ app.get('/api/documents/:id', async (req, res, next) => {
     // incoming: userId, documentId
     // outgoing: title, content, createdAt, updatedAt, error
 
-    const userId = req.body.userId;
-    const documentId = req.params.id;
+    const { userId, documentId } = req.body;
 
     if (!/^[a-f\d]{24}$/i.test(documentId)) {
         return res.status(400).json({ error: 'Invalid document ID format' });
