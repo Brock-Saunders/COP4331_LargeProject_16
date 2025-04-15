@@ -7,7 +7,7 @@ import Paragraph from '@tiptap/extension-paragraph';
 import Heading from '@tiptap/extension-heading';
 import Codeblock from '@tiptap/extension-code-block';
 
-//import './editor.css'
+import './editor.css'
 
 interface TextEditorProps {
   content: string;
