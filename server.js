@@ -222,6 +222,10 @@ app.put('/api/documents/:id', async (req, res, next) => {
     const { userId, title, content } = req.body;
     const documentId = req.params.id;
 
+    if (!/^[a-f\d]{24}$/i.test(documentId)) {
+        return res.status(400).json({ error: 'Invalid document ID format' });
+    }
+
     var filter = {
         _id: new ObjectId(documentId.toString()),
         userId: userId
@@ -257,6 +261,10 @@ app.delete('/api/documents/:id', async (req, res, next) => {
 
     const userId = req.body.userId;
     const documentId = req.params.id;
+
+    if (!/^[a-f\d]{24}$/i.test(documentId)) {
+        return res.status(400).json({ error: 'Invalid document ID format' });
+    }
 
     var query = {
         _id: new ObjectId(documentId.toString()),
