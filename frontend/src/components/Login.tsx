@@ -19,7 +19,7 @@ function Login({ onLogin }: LoginProps) {
     var obj = { login: loginName, password: loginPassword };
     var js = JSON.stringify(obj);
     try {
-      const response = await fetch('http://localhost:5000/api/login', {
+      const response = await fetch('https://largeproj.alexcanapp.xyz/api/users/login', {
         method: 'POST',
         body: js,
         headers: {
@@ -33,7 +33,7 @@ function Login({ onLogin }: LoginProps) {
         var user = { firstName: res.firstName, lastName: res.lastName, id: res.id };
         localStorage.setItem('user_data', JSON.stringify(user));
         setMessage('');
-        window.location.href = '/cards';
+        window.location.href = '/home';
       }
     } catch (error: any) {
       alert(error.toString());
