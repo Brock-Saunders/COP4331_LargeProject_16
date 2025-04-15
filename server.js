@@ -219,7 +219,7 @@ app.get('/api/documents/:id', async (req, res, next) => {
 });
 
 // PUT /api/documents/:id
-// Update document | CRASHING POSTMAN
+// Update document | WORKING POSTMAN
 app.put('/api/documents/:id', async (req, res, next) => {
     // incoming: userId, documentId, title, content
     // outgoing: error
@@ -301,8 +301,8 @@ app.delete('/api/documents/:id', async (req, res, next) => {
 });
 
 // GET /api/documents/search?q=searchTerm
-// displays searched documents | crashing postman
-app.get('/api/documents/search', async (req, res, next) => {
+// displays searched documents | working postman
+app.get('/api/documents/search?q=searchTerm', async (req, res, next) => {
     // incoming: userId, searchTerm
     // outgoing: documents[], error
 
