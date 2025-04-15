@@ -235,7 +235,7 @@ app.get('/api/documents/search', async (req, res, next) => {
 
     console.log("TRYING SEARCH DOCUMENTS");
 
-    const { userId, searchTerm } = req.body;
+    const { userId, searchTerm } = req.query;
 
     let error = '';
     let documents = [];
