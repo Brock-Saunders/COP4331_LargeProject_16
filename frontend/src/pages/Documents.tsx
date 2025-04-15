@@ -216,20 +216,20 @@ const Documents: React.FC = () => {
     }
     
     return (
-      <div className="flex-col overflow-hidden">
-        <div className='border border-gray-500 rounded-md'>
+      <div className="h-screen flex flex-col overflow-hidden">
+        <div className='sticky top-0 border z-[999] border-gray-500 rounded-md overflow-hidden'>
           <EditorNavbar />
           <MenuBar editor={mainEditor} />
         </div>
-        <div className="h-190 flex flex-1 border-gray-500 overflow-hidden p-3">
-          <div className="w-full md:w-1/4">
-            <FileSideBar 
+        <div className="h-190 flex flex-1 border-gray-500 rounded-md overflow-hidden p-3">
+          <aside className="w-full md:w-1/4 border-r border-b rounded-md border-gray-500 overflow-hidden h-full">
+            <FileSideBar
               files={files}
               currentFileId={currFileId}
               onSelectFile={setCurrFileId}
               onAddnewFile={addNewFile}
             />
-          </div>
+          </aside>  
           <div className="flex-1 bg-zinc-900 border border border-gray-500 rounded-md p-4 overflow-hidden">
             {currFile && (
               <div>

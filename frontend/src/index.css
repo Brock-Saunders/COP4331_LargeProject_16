@@ -34,7 +34,7 @@ html, body, #root {
 }
 
 #root {
-  display: flex;
+  /* display: flex; */
   align-items: center;
   justify-content: center;
 }
@@ -49,8 +49,8 @@ a:hover {
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  /* font-size: 3.2em; */
+  /* line-height: 1.1; */
 }
 
 button {
