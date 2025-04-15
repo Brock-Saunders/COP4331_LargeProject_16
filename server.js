@@ -131,7 +131,7 @@ app.post('/api/users/login', async (req, res, next) => {
 // GET /api/users/username
 // Retrieve username (login) by userId
 app.get('/api/users/username', async (req, res, next) => {
-    const { userId } = req.body;
+    const { userId } = req.query;
 
     if (!userId) {
         return res.status(400).json({ error: 'Missing userId parameter' });
@@ -271,7 +271,7 @@ app.get('/api/documents/get', async (req, res, next) => {
 
     console.log("TRYING GET DOCUMENT");
 
-    const { userId, documentId } = req.body;
+    const { userId, documentId } = req.query;
 
     if (!/^[a-f\d]{24}$/i.test(documentId)) {
         return res.status(400).json({ error: 'Invalid document ID format' });
