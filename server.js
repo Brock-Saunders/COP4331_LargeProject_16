@@ -144,7 +144,20 @@ app.post('/api/documents', async (req, res, next) => {
 
     const { userId, title, content } = req.body;
 
-    // create new user
+    // check if userId is provided and valid
+    if (!userId) {
+        return res.status(400).json({ error: 'Missing userId parameter' });
+    }
+    if (!/^[a-f\d]{24}$/i.test(userId)) {
+        return res.status(400).json({ error: 'Invalid userId format' });
+    }
+
+    // check if title is provided
+    if (!title) {
+        return res.status(400).json({ error: 'Missing title parameter' });
+    }
+
+    // create new document
     const newDocument = {
         userId: userId,
         title: title,
