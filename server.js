@@ -57,13 +57,13 @@ app.post('/api/users/register', async (req, res, next) => {
 
     // check if email already taken
     const db = client.db();
-    const echeck = await db.collection('Users').find({ Email: email }).toArray();
+    const echeck = await db.collection('Users').find({ email: email }).toArray();
     if (echeck.length > 0) {
         return res.status(200).json({ error: 'Email already taken' });
     }
 
     // check if login already taken
-    const lcheck = await db.collection('Users').find({ Login: login }).toArray();
+    const lcheck = await db.collection('Users').find({ login: login }).toArray();
     if (lcheck.length > 0) {
         return res.status(200).json({ error: 'Login already taken' });
     }
