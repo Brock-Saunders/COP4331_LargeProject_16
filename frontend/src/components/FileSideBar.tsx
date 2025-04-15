@@ -6,7 +6,7 @@ import {
   ArrowUpAZ,
 } from "lucide-react";
 
-//import "./FileSideBar.css";
+import "../styles/FileSideBar.css";
 
 interface File {
   _id: string;

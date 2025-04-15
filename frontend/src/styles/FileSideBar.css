@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@tailwind utilities;
 /* Hides the scroll bar for file view */
 @layer utilities {
     .no-scrollbar::-webkit-scrollbar {
