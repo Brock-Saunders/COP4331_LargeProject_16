@@ -229,6 +229,9 @@ app.put('/api/documents/:id', async (req, res, next) => {
     const { userId, title, content } = req.body;
     const documentId = req.params.id;
 
+    console.log("docId: " + documentId);
+    console.log("userId: " + userId);
+
     if (!/^[a-f\d]{24}$/i.test(documentId)) {
         return res.status(400).json({ error: 'Invalid document ID format' });
     }
