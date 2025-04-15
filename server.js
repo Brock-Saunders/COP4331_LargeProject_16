@@ -106,7 +106,7 @@ app.post('/api/users/login', async (req, res, next) => {
     const { login, password } = req.body;
 
     const db = client.db();
-    const user = await db.collection('Users').findOne({ Login: login });
+    const user = await db.collection('Users').findOne({ login: login });
     if (!user) {
         return res.status(200).json({ error: 'User not found' });
     }
