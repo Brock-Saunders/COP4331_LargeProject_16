@@ -1,0 +1,92 @@
+import React, { useState } from 'react';
+import '../styles/RegisterStyles.css';
+import { useNavigate } from 'react-router-dom';
+
+function Register() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  function handleRegister(e: React.FormEvent) {
+    e.preventDefault();
+
+    if (!username || !password || !confirmPassword) {
+      setMessage('Please fill in all fields.');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setMessage('Passwords do not match.');
+      return;
+    }
+
+    setMessage('Registered successfully!');
+    setLoading(true);
+
+    setTimeout(() => {
+      navigate('/');
+    }, 1500); // 1.5 second redirect
+  }
+
+  return (
+    <div className="register-wrapper">
+      <div className="register-card">
+        <div className="register-left">
+          <div className="register-form">
+            <h1 className="register-title">Register here!</h1>
+            <p className="register-subtitle">Create an account to get started!</p>
+
+            <input
+              type="text"
+              placeholder="Username"
+              className="register-input"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              disabled={loading}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              className="register-input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={loading}
+            />
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              className="register-input"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              disabled={loading}
+            />
+
+            <button className="register-button" onClick={handleRegister} disabled={loading}>
+              {loading ? 'Registering...' : 'Register'}
+            </button>
+
+            {(message || loading) && (
+              <div className="register-message-with-spinner">
+                {loading && <div className="spinner" />}
+                <span className="register-message-text">{message}</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="register-right">
+          <h2 className="register-heading">Already Registered?</h2>
+          <p>Go back to login and access your notes!</p>
+          <a href="/" className="login-back-button">
+            Login
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default Register;
