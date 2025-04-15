@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 interface HomebarProps {
   username: string;
   onLogout: () => void;
-  onCreateNewDocument: () => void;
 }
 
-const Homebar: React.FC<HomebarProps> = ({ username, onLogout, onCreateNewDocument }) => {
+const Homebar: React.FC<HomebarProps> = ({ username, onLogout }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleCreateNewDocument = () => {
+    navigate('/documents'); 
+  };
 
   return (
     <nav className="p-4 w-full fixed top-0 left-0 right-0 z-50 shadow-lg" style={{ backgroundColor: '#1f1f1f' }}>
@@ -25,7 +31,7 @@ const Homebar: React.FC<HomebarProps> = ({ username, onLogout, onCreateNewDocume
 
         <div className="flex items-center space-x-4">
           <button
-            onClick={onCreateNewDocument}
+            onClick={handleCreateNewDocument}
             className="bg-gradient-to-br from-gray-400 to-gray-300 text-black px-4 py-2 rounded-lg hover:from-gray-300 hover:to-gray-200 transition"
           >
             Create New Document
