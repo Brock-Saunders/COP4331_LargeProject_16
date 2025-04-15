@@ -4,7 +4,7 @@ const MongoClient = require('mongodb').MongoClient;
 const url = process.env.MONGO_DB_CONNECTION_STRING;
 const client = new MongoClient(url);
 client.connect();
-console.log("mongodb connection string: "+url)
+console.log("mongodb connection string: " + url)
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -70,7 +70,7 @@ app.post('/api/users/register', async (req, res, next) => {
     try {
         const db = client.db();
         const result = await db.collection('Users').insertOne(newUser);
-        console.log("user registered: "+result);
+        console.log("user registered: " + result);
     } catch (e) {
         error = e.toString();
     }
@@ -136,7 +136,7 @@ app.get('/api/documents', async (req, res, next) => {
 app.post('/api/documents', async (req, res, next) => {
     // incoming: userId, title, content
     // outgoing: documentId, error
-    const { userId, title, content} = req.body;
+    const { userId, title, content } = req.body;
 
     // create new user
     const newDocument = {
@@ -152,12 +152,12 @@ app.post('/api/documents', async (req, res, next) => {
     try {
         const db = client.db();
         const result = await db.collection('Documents').insertOne(newDocument);
-        console.log("document created: "+result);
+        console.log("document created: " + result);
         id = result.insertedId.toString();
     } catch (e) {
         error = e.toString();
     }
-    var ret = { documentId:id, error: error };
+    var ret = { documentId: id, error: error };
     res.status(200).json(ret);
 });
 
@@ -173,22 +173,22 @@ app.get('/api/documents/:id', async (req, res, next) => {
         _id: new ObjectId(documentId.toString()),
         userId: userId
     };
-    console.log("docId: "+query._id);
-    console.log("userId: "+query.userId);
+    console.log("docId: " + query._id);
+    console.log("userId: " + query.userId);
     var result = '';
     var error = '';
-    var ret = {error:""}
+    var ret = { error: "" }
 
     try {
         const db = client.db();
         result = await db.collection('Documents').findOne(query)
-        console.log("document retrieved: "+result)
+        console.log("document retrieved: " + result)
     }
     catch (e) {
         error = e.toString();
     }
 
-    if (result != null){
+    if (result != null) {
         ret = {
             title: result.title,
             content: result.content,
@@ -196,7 +196,7 @@ app.get('/api/documents/:id', async (req, res, next) => {
             updatedAt: result.updatedAt,
             error: error
         };
-    } else if (error === ""){
+    } else if (error === "") {
         return res.status(404).json({ error: 'Document not found' });
     }
 
@@ -229,12 +229,12 @@ app.put('/api/documents/:id', async (req, res, next) => {
     try {
         const db = client.db();
         result = await db.collection('Documents').updateOne(filter, update)
-        console.log("document updated?: "+result.modifiedCount)
+        console.log("document updated?: " + result.modifiedCount)
     }
     catch (e) {
         error = e.toString();
     }
-    
+
     var ret = { error: error };
     res.status(200).json(ret);
 });
@@ -251,15 +251,15 @@ app.delete('/api/documents/:id', async (req, res, next) => {
         _id: new ObjectId(documentId.toString()),
         userId: userId
     };
-    console.log("docId: "+query._id);
-    console.log("userId: "+query.userId);
+    console.log("docId: " + query._id);
+    console.log("userId: " + query.userId);
     var result = '';
     var error = '';
 
     try {
         const db = client.db();
         result = await db.collection('Documents').deleteOne(query)
-        console.log("document retrieved: "+result)
+        console.log("document retrieved: " + result)
     }
     catch (e) {
         error = e.toString();
@@ -338,4 +338,4 @@ app.post('/api/searchcards', async (req, res, next) => {
     res.status(200).json(ret);
 });
 
-app.listen(5600); // start Node + Express server on port 5000
+app.listen(5000); // start Node + Express server on port 5000
