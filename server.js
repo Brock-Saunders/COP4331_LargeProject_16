@@ -1,4 +1,5 @@
 const dotenv = require('dotenv').config();
+const bcrypt = require('bcrypt');
 // DATABASE SETUP / CONNECTION
 const MongoClient = require('mongodb').MongoClient;
 const url = process.env.MONGO_DB_CONNECTION_STRING;
@@ -26,6 +27,19 @@ app.use((req, res, next) => {
     next();
 });
 
+// hashing functions
+async function hashPassword(password) {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    return hashedPassword;
+}
+
+async function comparePassword(password, hashedPassword) {
+    const match = await bcrypt.compare(password, hashedPassword);
+    return match;
+}
+
+
 // USER API ENDPOINTS:
 
 // POST /api/users/register
@@ -43,19 +57,20 @@ app.post('/api/users/register', async (req, res, next) => {
 
     // check if email already taken
     const db = client.db();
-    const echeck = db.collection('Users').find({ Email: email }).toArray();
+    const echeck = await db.collection('Users').find({ Email: email }).toArray();
     if (echeck.length > 0) {
         return res.status(200).json({ error: 'Email already taken' });
     }
 
     // check if login already taken
-    const lcheck = db.collection('Users').find({ Login: login }).toArray();
+    const lcheck = await db.collection('Users').find({ Login: login }).toArray();
     if (lcheck.length > 0) {
         return res.status(200).json({ error: 'Login already taken' });
     }
 
-    // HASH PASSWORD HERE ?
-    const hashedPassword = password; // Replace with actual hashing logic?
+    // HASH PASSWORD
+    const hashedPassword = await hashPassword(password);
+    console.log("hashed password: " + hashedPassword);
 
     // create new user
     const newUser = {
@@ -84,33 +99,68 @@ app.post('/api/users/register', async (req, res, next) => {
 app.post('/api/users/login', async (req, res, next) => {
     // incoming: login, password
     // outgoing: id, firstName, lastName, error
+    var id = -1;
+    var firstName = '';
+    var lastName = '';
     var error = '';
     const { login, password } = req.body;
 
-    // hash password here ?
-    const hashedPassword = password; // Replace with actual hashing logic?
-
     const db = client.db();
-    const results = await
-        db.collection('Users').find({ login: login, password: hashedPassword }).toArray();
-    var id = -1;
-    var fn = '';
-    var ln = '';
-    if (results.length > 0) {
-        id = results[0]._id;
-        fn = results[0].firstName;
-        ln = results[0].lastName;
+    const user = await db.collection('Users').findOne({ login: login });
+    if (!user) {
+        return res.status(200).json({ error: 'Invalid login credentials' });
+        console.log("user not found: " + login);
     }
+
+    const match = await comparePassword(password, user.password);
+    if (!match) {
+        return res.status(200).json({ error: 'Invalid login credentials' });
+        console.log("passwords do not match: " + password + " != " + user.password);
+    }
+    console.log("user logged in: " + user.Login);
+
+    var id = user._id
+    var fn = user.firstName;
+    var ln = user.lastName;
+
     var ret = { id: id, firstName: fn, lastName: ln, error: error };
     res.status(200).json(ret);
 });
 
+// GET /api/users/username
+// Retrieve username (login) by userId
+app.get('/api/users/username', async (req, res, next) => {
+    const { userId } = req.body;
+
+    if (!userId) {
+        return res.status(400).json({ error: 'Missing userId parameter' });
+    }
+
+    if (!/^[a-f\d]{24}$/i.test(userId)) {
+        return res.status(400).json({ error: 'Invalid userId format' });
+    }
+
+    try {
+        const db = client.db();
+        const user = await db.collection('Users').findOne({ _id: new ObjectId(userId) });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.status(200).json({ username: user.login }); // Return the login field as username
+    } catch (error) {
+        res.status(500).json({ error: error.toString() });
+    }
+});
+
 // DOCUMENT API ENDPOINTS:
+
 // GET /api/documents
 // Display all documents | WORKING POSTMAN
 app.get('/api/documents', async (req, res, next) => {
     // incoming: userId
-    const userId = req.query.userId;
+    const { userId } = req.body;
 
     var error = '';
     // What is to be exported
@@ -144,7 +194,20 @@ app.post('/api/documents', async (req, res, next) => {
 
     const { userId, title, content } = req.body;
 
-    // create new user
+    // check if userId is provided and valid
+    if (!userId) {
+        return res.status(400).json({ error: 'Missing userId parameter' });
+    }
+    if (!/^[a-f\d]{24}$/i.test(userId)) {
+        return res.status(400).json({ error: 'Invalid userId format' });
+    }
+
+    // check if title is provided
+    if (!title) {
+        return res.status(400).json({ error: 'Missing title parameter' });
+    }
+
+    // create new document
     const newDocument = {
         userId: userId,
         title: title,
@@ -167,16 +230,51 @@ app.post('/api/documents', async (req, res, next) => {
     res.status(200).json(ret);
 });
 
+// GET /api/documents/search
+// displays searched documents | working postman
+app.get('/api/documents/search', async (req, res, next) => {
+    // incoming: userId, searchTerm
+    // outgoing: documents[], error
+
+    console.log("TRYING SEARCH DOCUMENTS");
+
+    const { userId, searchTerm } = req.body;
+
+    let error = '';
+    let documents = [];
+
+    // outgoing: documents[], error
+    try {
+        // Gets DB connection
+        const db = client.db();
+
+        // Retrieves documents by search and converts to array, sorted by most recently updated
+        documents = await db.collection('Documents')
+            .find({
+                userId: userId,
+                $or: [
+                    { title: { $regex: searchTerm, $options: 'i' } },
+                    { content: { $regex: searchTerm, $options: 'i' } }
+                ]
+            })
+            .sort({ updatedAt: -1 })
+            .toArray();
+    } catch (e) {
+        error = e.toString();
+    }
+
+    return res.status(200).json({ documents, error });
+});
+
 // GET /api/documents/:id
 // GET SPECIFIC DOCUMENT | WORKING POSTMAN
-app.get('/api/documents/:id', async (req, res, next) => {
+app.get('/api/documents/get', async (req, res, next) => {
     // incoming: userId, documentId
     // outgoing: title, content, createdAt, updatedAt, error
 
     console.log("TRYING GET DOCUMENT");
 
-    const userId = req.query.userId;
-    const documentId = req.params.id;
+    const { userId, documentId } = req.body;
 
     if (!/^[a-f\d]{24}$/i.test(documentId)) {
         return res.status(400).json({ error: 'Invalid document ID format' });
@@ -220,14 +318,13 @@ app.get('/api/documents/:id', async (req, res, next) => {
 
 // PUT /api/documents/:id
 // Update document | WORKING POSTMAN
-app.put('/api/documents/:id', async (req, res, next) => {
+app.put('/api/documents/update', async (req, res, next) => {
     // incoming: userId, documentId, title, content
     // outgoing: error
 
     console.log("TRYING UPDATE DOCUMENT");
 
-    const { userId, title, content } = req.body;
-    const documentId = req.params.id;
+    const { userId, documentId, title, content } = req.body;
 
     console.log("docId: " + documentId);
     console.log("userId: " + userId);
@@ -265,14 +362,13 @@ app.put('/api/documents/:id', async (req, res, next) => {
 
 // DELETE /api/documents/:id
 // Delete document | WORKING POSTMAN
-app.delete('/api/documents/:id', async (req, res, next) => {
+app.delete('/api/documents/delete', async (req, res, next) => {
     // incoming: userId, documentId
     // outgoing: error
 
     console.log("TRYING DELETE DOCUMENT");
 
-    const userId = req.body.userId;
-    const documentId = req.params.id;
+    const { userId, documentId } = req.body;
 
     if (!/^[a-f\d]{24}$/i.test(documentId)) {
         return res.status(400).json({ error: 'Invalid document ID format' });
@@ -300,78 +396,5 @@ app.delete('/api/documents/:id', async (req, res, next) => {
     res.status(200).json(ret);
 });
 
-// GET /api/documents/search?q=searchTerm
-// displays searched documents | working postman
-app.get('/api/documents/search?q=searchTerm', async (req, res, next) => {
-    // incoming: userId, searchTerm
-    // outgoing: documents[], error
-
-    console.log("TRYING SEARCH DOCUMENTS");
-
-    const userId = req.query.userId;
-    const searchTerm = req.query.q;
-
-    let error = '';
-    let documents = [];
-
-    // outgoing: documents[], error
-    try {
-        // Gets DB connection
-        const db = client.db();
-
-        // Retrieves documents by search and converts to array, sorted by most recently updated
-        documents = await db.collection('Documents')
-            .find({
-                userId: userId,
-                $or: [
-                    { title: { $regex: searchTerm, $options: 'i' } },
-                    { content: { $regex: searchTerm, $options: 'i' } }
-                ]
-            })
-            .sort({ updatedAt: -1 })
-            .toArray();
-    } catch (e) {
-        error = e.toString();
-    }
-
-    return res.status(200).json({ documents, error });
-});
-
-
-
-// OLD CARDS LAB API ENDPOINTS
-app.post('/api/addcard', async (req, res, next) => {
-    // incoming: userId, color
-    // outgoing: error
-    const { userId, card } = req.body;
-    const newCard = { Card: card, UserId: userId };
-    var error = '';
-    try {
-        //const db = client.db();
-        const result = db.collection('Cards').insertOne(newCard);
-    }
-    catch (e) {
-        error = e.toString();
-    }
-    cardList.push(card);
-    var ret = { error: error };
-    res.status(200).json(ret);
-});
-
-app.post('/api/searchcards', async (req, res, next) => {
-    // incoming: userId, search
-    // outgoing: results[], error
-    var error = '';
-    const { userId, search } = req.body;
-    var _search = search.trim();
-    //const db = client.db();
-    const results = await db.collection('Cards').find({ "Card": { $regex: _search + '.*' } }).toArray();
-    var _ret = [];
-    for (var i = 0; i < results.length; i++) {
-        _ret.push(results[i].Card);
-    }
-    var ret = { results: _ret, error: error };
-    res.status(200).json(ret);
-});
 
 app.listen(5000); // start Node + Express server on port 5000

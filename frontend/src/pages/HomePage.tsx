@@ -13,7 +13,7 @@ const HomePage = () => {
     };
     
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen text-white" style={{ backgroundColor: '#1f1f1f' }}>
             <Homebar
                 username={username}
                 onLogout={handleLogout}

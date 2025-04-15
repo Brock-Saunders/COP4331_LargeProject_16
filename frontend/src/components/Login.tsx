@@ -27,8 +27,10 @@ function Login({ onLogin }: LoginProps) {
     const obj = { login: loginName, password: loginPassword };
     const js = JSON.stringify(obj);
 
+    // https://largeproj.alexcanapp.xyz/api/users/login
+    //change localhost to largeproj when put on the lightsail server
     try {
-      const response = await fetch('https://largeproj.alexcanapp.xyz/api/users/login', {
+      const response = await fetch('http://localhost:5000/api/users/login', {
         method: 'POST',
         body: js,
         headers: {
@@ -37,24 +39,34 @@ function Login({ onLogin }: LoginProps) {
       });
 
       const res = JSON.parse(await response.text());
+      console.log("Login API response:", res);
 
-      if (res.id <= 0) {
-        setMessage('User/Password combination incorrect');
-      } else {
-        const user = {
-          firstName: res.firstName,
-          lastName: res.lastName,
-          id: res.id,
-        };
-        localStorage.setItem('user_data', JSON.stringify(user));
-        setMessage('');
-        window.location.href = '/home';
-      }
-    } catch (error: any) {
-      alert(error.toString());
+      // Check for error in the response
+    if (res.error) {
+      setMessage(res.error); // Display the error message from the API
       return;
     }
+
+    // Check if the ID is valid
+    if (!res.id || res.id <= 0) {
+      setMessage('User/Password combination incorrect');
+      return;
+    }
+
+    // Save user data to localStorage
+    const user = {
+      firstName: res.firstName,
+      lastName: res.lastName,
+      id: res.id,
+    };
+    localStorage.setItem('user_data', JSON.stringify(user));
+    setMessage('');
+    window.location.href = '/home';
+  } catch (error: any) {
+    alert(error.toString());
+    return;
   }
+}
 
   return (
     <div className="login-wrapper">
@@ -62,8 +74,7 @@ function Login({ onLogin }: LoginProps) {
         <div className="login-left">
           <div className="login-form">
             <h1 className="login-title">
-            Online<br />
-            Text-Editor
+            Notes App
             </h1>
           <p className="login-subtitle">Login to your account!</p>
          
