@@ -4,38 +4,67 @@ interface Document {
   id: string;
   title: string;
   description: string;
+  updatedAt: string;
+  // Add other fields that might be returned from your API
 }
 
 const DocumentList: React.FC = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    // Uncomment this section to fetch documents from an API
-    // async function fetchDocuments() {
-    //   try {
-    //     const response = await fetch('http://localhost:5000/api/documents'); // Replace with API endpoint
-    //     const data = await response.json();
-    //     setDocuments(data);
-    //   } catch (error) {
-    //     console.error('Error fetching documents:', error);
-    //   }
-    // }
-
-    // fetchDocuments();
-
-    // Mock data for testing
-    const mockDocuments: Document[] = [
-      { id: '1', title: 'Document 1', description: 'Description of Document 1' },
-      { id: '2', title: 'Document 2', description: 'Description of Document 2' },
-      { id: '3', title: 'Document 3', description: 'Description of Document 3' },
-      { id: '4', title: 'Document 4', description: 'Description of Document 4' },
-    ];
-
-    // Simulate API delay
-    setTimeout(() => {
-      setDocuments(mockDocuments);
-    }, 500); // 500ms delay
+    const fetchDocuments = async () => {
+      const userData = localStorage.getItem("user_data");
+      if (!userData) {
+        console.error("User data not found in localStorage");
+        setError("User not logged in");
+        setLoading(false);
+        return;
+      }
+   
+      const parsedUserData = JSON.parse(userData);
+      const userId = parsedUserData.id;
+   
+      try {
+        // Using GET with query parameters - proper RESTful approach
+        const response = await fetch(`http://localhost:5000/api/documents?userId=${encodeURIComponent(userId)}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+   
+        const data = await response.json();
+   
+        if (data.error) {
+          console.error("Error fetching documents:", data.error);
+          setError(data.error);
+        } else {
+          setDocuments(data.documents);
+        }
+      } catch (error) {
+        console.error("Error fetching documents:", error);
+        setError("Failed to fetch documents");
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchDocuments();
   }, []);
+  
+  if (loading) {
+    return <div className="p-4 text-center">Loading documents...</div>;
+  }
+
+  if (error) {
+    return <div className="p-4 text-center text-red-500">{error}</div>;
+  }
+  
+  if (documents.length === 0) {
+    return <div className="p-4 text-center">No documents found.</div>;
+  }
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4" style={{ backgroundColor: '#1f1f1f' }}>
@@ -46,6 +75,9 @@ const DocumentList: React.FC = () => {
         >
           <h3 className="text-lg font-bold">{doc.title}</h3>
           <p className="text-gray-700">{doc.description}</p>
+          <p className="text-xs text-gray-600 mt-2">
+            Last updated: {new Date(doc.updatedAt).toLocaleDateString()}
+          </p>
         </div>
       ))}
     </div>

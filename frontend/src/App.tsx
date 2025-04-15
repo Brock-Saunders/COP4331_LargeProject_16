@@ -5,6 +5,7 @@ import RegisterPage from './pages/RegisterPage'; // ✅ New import
 import HomePage from './pages/HomePage';
 import NewNote from './pages/Documents';
 import MenuBar from './components/MenuBar';
+import Documents from './pages/Documents';
 // import EditorNavbar from "./components/Navbar";
 
 function App() {
@@ -14,7 +15,8 @@ function App() {
         <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} /> {/* ✅ New route */}
         <Route path="/home" element={<HomePage />} />
-        <Route path="/new-note" element={<NewNote />} />
+        <Route path="documents" element={<Documents />} />
+        {/* <Route path="/new-note" element={<NewNote />} /> */}
       </Routes>
     </Router>
   );

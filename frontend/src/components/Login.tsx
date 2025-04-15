@@ -39,24 +39,35 @@ function Login({ onLogin }: LoginProps) {
       });
 
       const res = JSON.parse(await response.text());
+      console.log("Login API response:", res);
 
-      if (res.id <= 0) {
-        setMessage('User/Password combination incorrect');
-      } else {
-        const user = {
-          firstName: res.firstName,
-          lastName: res.lastName,
-          id: res.id,
-        };
-        localStorage.setItem('user_data', JSON.stringify(user));
-        setMessage('');
-        window.location.href = '/home';
-      }
-    } catch (error: any) {
-      alert(error.toString());
+      // Check for error in the response
+    if (res.error) {
+      setMessage(res.error); // Display the error message from the API
       return;
     }
+
+    // Check if the ID is valid
+    if (!res.id || res.id <= 0) {
+      setMessage('User/Password combination incorrect');
+      return;
+    }
+
+    // Save user data to localStorage
+    const user = {
+      firstName: res.firstName,
+      lastName: res.lastName,
+      id: res.id,
+      login: res.login,
+    };
+    localStorage.setItem('user_data', JSON.stringify(user));
+    setMessage('');
+    window.location.href = '/home';
+  } catch (error: any) {
+    alert(error.toString());
+    return;
   }
+} 
 
   return (
     <div className="login-wrapper">

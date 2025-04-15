@@ -4,6 +4,7 @@ import {
   FilePlus,
   ArrowDownAZ,
   ArrowUpAZ,
+  Trash2
 } from "lucide-react";
 
 import "../styles/FileSideBar.css";
@@ -60,7 +61,7 @@ const FileSideBar: React.FC<SideBarProps> = ({
               >
                 <FileText size={20} />
                 <span className="truncate">{file.title}</span>
-              </li>
+                </li>
             ))}
           </ul>
         </div>
