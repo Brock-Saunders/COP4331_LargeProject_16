@@ -240,7 +240,7 @@ app.get('/api/documents/search', async (req, res, next) => {
 
 // GET /api/documents/:id
 // GET SPECIFIC DOCUMENT | WORKING POSTMAN
-app.get('/api/documents/:id', async (req, res, next) => {
+app.get('/api/documents/get', async (req, res, next) => {
     // incoming: userId, documentId
     // outgoing: title, content, createdAt, updatedAt, error
 
@@ -290,7 +290,7 @@ app.get('/api/documents/:id', async (req, res, next) => {
 
 // PUT /api/documents/:id
 // Update document | WORKING POSTMAN
-app.put('/api/documents/:id', async (req, res, next) => {
+app.put('/api/documents/update', async (req, res, next) => {
     // incoming: userId, documentId, title, content
     // outgoing: error
 
@@ -334,7 +334,7 @@ app.put('/api/documents/:id', async (req, res, next) => {
 
 // DELETE /api/documents/:id
 // Delete document | WORKING POSTMAN
-app.delete('/api/documents/:id', async (req, res, next) => {
+app.delete('/api/documents/delete', async (req, res, next) => {
     // incoming: userId, documentId
     // outgoing: error
 
