@@ -57,13 +57,13 @@ app.post('/api/users/register', async (req, res, next) => {
 
     // check if email already taken
     const db = client.db();
-    const echeck = db.collection('Users').find({ Email: email }).toArray();
+    const echeck = await db.collection('Users').find({ Email: email }).toArray();
     if (echeck.length > 0) {
         return res.status(200).json({ error: 'Email already taken' });
     }
 
     // check if login already taken
-    const lcheck = db.collection('Users').find({ Login: login }).toArray();
+    const lcheck = await db.collection('Users').find({ Login: login }).toArray();
     if (lcheck.length > 0) {
         return res.status(200).json({ error: 'Login already taken' });
     }
@@ -108,12 +108,14 @@ app.post('/api/users/login', async (req, res, next) => {
     const db = client.db();
     const user = await db.collection('Users').findOne({ login: login });
     if (!user) {
-        return res.status(200).json({ error: 'User not found' });
+        return res.status(200).json({ error: 'Invalid login credentials' });
+        console.log("user not found: " + login);
     }
 
     const match = await comparePassword(password, user.password);
     if (!match) {
-        return res.status(200).json({ error: 'Invalid password' });
+        return res.status(200).json({ error: 'Invalid login credentials' });
+        console.log("passwords do not match: " + password + " != " + user.password);
     }
     console.log("user logged in: " + user.Login);
 
