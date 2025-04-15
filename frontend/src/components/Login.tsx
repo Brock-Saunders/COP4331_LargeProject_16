@@ -61,9 +61,12 @@ function Login({ onLogin }: LoginProps) {
       <div className="login-card">
         <div className="login-left">
           <div className="login-form">
-          <h1 className="login-title">Login to Your Account</h1>
-          <p className="login-subtitle">Use your credentials to sign in</p>
-          <div className="login-header-label">Online Text Editor</div>
+            <h1 className="login-title">
+            Online<br />
+            Text-Editor
+            </h1>
+          <p className="login-subtitle">Login to your account!</p>
+         
             <input
               type="text"
               id="loginName"
@@ -87,9 +90,9 @@ function Login({ onLogin }: LoginProps) {
           </div>
         </div>
         <div className="login-right">
-          <h2>New Here?</h2>
+        <h2 className="new-here-heading">New Here?</h2>
           <p>Sign up and discover a great amount of new opportunities!</p>
-          <button className="signup-button">Sign Up</button>
+          <a href="/register" className="signup-button">Sign Up</a>
         </div>
       </div>
     </div>
