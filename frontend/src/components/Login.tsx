@@ -1,4 +1,6 @@
+// File: src/components/Login.tsx
 import React, { useState } from 'react';
+import '../styles/LoginStyles.css';
 
 interface LoginProps {
   onLogin?: (username: string, password: string) => void;
@@ -11,13 +13,20 @@ function Login({ onLogin }: LoginProps) {
 
   async function doLogin(event: any): Promise<void> {
     event.preventDefault();
+
+    if (!loginName || !loginPassword) {
+      setMessage('Please enter both username and password.');
+      return;
+    }
+
     if (onLogin) {
       onLogin(loginName, loginPassword);
       return;
     }
 
-    var obj = { login: loginName, password: loginPassword };
-    var js = JSON.stringify(obj);
+    const obj = { login: loginName, password: loginPassword };
+    const js = JSON.stringify(obj);
+
     try {
       const response = await fetch('https://largeproj.alexcanapp.xyz/api/users/login', {
         method: 'POST',
@@ -26,11 +35,17 @@ function Login({ onLogin }: LoginProps) {
           'Content-Type': 'application/json',
         },
       });
-      var res = JSON.parse(await response.text());
+
+      const res = JSON.parse(await response.text());
+
       if (res.id <= 0) {
         setMessage('User/Password combination incorrect');
       } else {
-        var user = { firstName: res.firstName, lastName: res.lastName, id: res.id };
+        const user = {
+          firstName: res.firstName,
+          lastName: res.lastName,
+          id: res.id,
+        };
         localStorage.setItem('user_data', JSON.stringify(user));
         setMessage('');
         window.location.href = '/home';
@@ -41,23 +56,42 @@ function Login({ onLogin }: LoginProps) {
     }
   }
 
-  function handleSetLoginName(e: any): void {
-    setLoginName(e.target.value);
-  }
-  function handleSetPassword(e: any): void {
-    setPassword(e.target.value);
-  }
-
   return (
-    <div id="loginDiv">
-      <span id="inner-title">PLEASE LOG IN</span>
-      <br />
-      <input type="text" id="loginName" placeholder="Username" onChange={handleSetLoginName} />
-      <br />
-      <input type="password" id="loginPassword" placeholder="Password" onChange={handleSetPassword} />
-      <br />
-      <input type="submit" id="loginButton" className="buttons" value="Do It" onClick={doLogin} />
-      <span id="loginResult">{message}</span>
+    <div className="login-wrapper">
+      <div className="login-card">
+        <div className="login-left">
+          <div className="login-form">
+          <h1 className="login-title">Login to Your Account</h1>
+          <p className="login-subtitle">Use your credentials to sign in</p>
+          <div className="login-header-label">Online Text Editor</div>
+            <input
+              type="text"
+              id="loginName"
+              placeholder="Username"
+              value={loginName}
+              onChange={(e) => setLoginName(e.target.value)}
+              className="login-input"
+            />
+            <input
+              type="password"
+              id="loginPassword"
+              placeholder="Password"
+              value={loginPassword}
+              onChange={(e) => setPassword(e.target.value)}
+              className="login-input"
+            />
+            <button onClick={doLogin} className="login-button">
+              Log In
+            </button>
+            <span className="login-message">{message}</span>
+          </div>
+        </div>
+        <div className="login-right">
+          <h2>New Here?</h2>
+          <p>Sign up and discover a great amount of new opportunities!</p>
+          <button className="signup-button">Sign Up</button>
+        </div>
+      </div>
     </div>
   );
 }
