@@ -5,10 +5,12 @@ import { useNavigate } from 'react-router-dom';
 interface HomebarProps {
   username: string;
   onLogout: () => void;
+  onSearch: (searchTerm: string) => void;
 }
 
-const Homebar: React.FC<HomebarProps> = ({ username, onLogout }) => {
+const Homebar: React.FC<HomebarProps> = ({ username, onLogout, onSearch }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const navigate = useNavigate();
 
@@ -16,17 +18,29 @@ const Homebar: React.FC<HomebarProps> = ({ username, onLogout }) => {
     navigate('/documents'); 
   };
 
+  const handleSearchClick = () => {
+    onSearch(searchTerm); // Trigger the search with the current search term
+  };
+
   return (
     <nav className="p-4 w-full fixed top-0 left-0 right-0 z-50 shadow-lg" style={{ backgroundColor: '#1f1f1f' }}>
       <div className="container mx-auto flex justify-between items-center">
         <div className="text-white text-xl font-bold">Notes App</div>
 
-        <div className="flex-grow mx-8">
+        <div className="flex-grow mx-8 flex items-center space-x-2">
           <input
             type="text"
             placeholder="Search..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             className="bg-gradient-to-br from-gray-400 to-gray-300 text-black w-full px-4 py-2 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600"
           />
+          <button
+            onClick={handleSearchClick}
+            className="bg-gradient-to-br from-gray-400 to-gray-300 text-black px-4 py-2 rounded-lg hover:from-gray-300 hover:to-gray-200 transition"
+          >
+            Search
+          </button>
         </div>
 
         <div className="flex items-center space-x-4">

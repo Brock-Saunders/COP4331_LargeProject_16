@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface Document {
@@ -8,61 +8,18 @@ interface Document {
   updatedAt: string;
 }
 
-const DocumentList: React.FC = () => {
-  const [documents, setDocuments] = useState<Document[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const navigate = useNavigate();
+interface DocumentListProps {
+  documents: Document[];
+  error: string | null;
+}
 
-  useEffect(() => {
-    const fetchDocuments = async () => {
-      const userData = localStorage.getItem("user_data");
-      if (!userData) {
-        console.error("User data not found in localStorage");
-        setError("User not logged in");
-        setLoading(false);
-        return;
-      }
-   
-      const parsedUserData = JSON.parse(userData);
-      const userId = parsedUserData.id;
-   
-      try {
-        // Using GET with query parameters - proper RESTful approach
-        const response = await fetch(`http://localhost:5000/api/documents?userId=${encodeURIComponent(userId)}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        });
-   
-        const data = await response.json();
-   
-        if (data.error) {
-          console.error("Error fetching documents:", data.error);
-          setError(data.error);
-        } else {
-          setDocuments(data.documents);
-        }
-      } catch (error) {
-        console.error("Error fetching documents:", error);
-        setError("Failed to fetch documents");
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchDocuments();
-  }, []);
-  
-  if (loading) {
-    return <div className="p-4 text-center">Loading documents...</div>;
-  }
+const DocumentList: React.FC<DocumentListProps> = ({ documents, error }) => {
+  const navigate = useNavigate();
 
   if (error) {
     return <div className="p-4 text-center text-red-500">{error}</div>;
   }
-  
+
   if (documents.length === 0) {
     return <div className="p-4 text-center">No documents found.</div>;
   }
@@ -73,11 +30,11 @@ const DocumentList: React.FC = () => {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4" style={{ backgroundColor: '#1f1f1f' }}>
-      {documents.map((doc) => (
+      {documents.map((doc, index) => (
         <div
-          key={doc.id}
+          key={doc.id || index} // Use `doc.id` if available, otherwise fallback to `index`
           className="bg-gradient-to-br from-gray-400 to-gray-300 text-black shadow-md rounded-lg p-4 hover:shadow-lg transition"
-          onClick={() => handleCardClick(doc.id)} //navaigate to document on card click
+          onClick={() => handleCardClick(doc.id)} // Navigate to document on card click
         >
           <h3 className="text-lg font-bold">{doc.title}</h3>
           <p className="text-gray-700">{doc.description}</p>
