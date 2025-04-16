@@ -51,8 +51,13 @@ const EditorNavbar: React.FC<EditorNavbarProps> = ({ onSave, disabled }) => {
   return (
     <Navbar className="rounded-md border-gray-500 bg-zinc-900 px-4">
       <NavbarBrand>
+      <button
+        className="flex items-center space-x-2 cursor-pointer focus:outline-none"
+        onClick={() => (window.location.href = "/home")}
+      >
         <File />
-        <p className="font-bold text-inherit">Text Editor</p>
+        <p className="font-bold text-inherit">Notes App</p>
+      </button>
       </NavbarBrand>
       <NavbarContent justify="center">
         <NavbarItem>
