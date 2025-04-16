@@ -37,6 +37,8 @@ const Documents: React.FC = () => {
   const { updateDocument, loading: updateLoading, error: updateError} = useUpdateDocuments(userId); 
   const lastSavedTitleRef = useRef<string>(title);
   const lastSavedContentRef = useRef<string>(content);
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+
   
   const currFile = documents.find((doc: DocumentData) => doc._id === currFileId);
 
@@ -183,7 +185,11 @@ const Documents: React.FC = () => {
         </div>
       </div>
       <div className="sticky bottom-0 z-50">
-        <EditorFooter />
+        <EditorFooter 
+          lastSaved={lastSaved}
+          lastUpdated={currFile?.updatedAt ?? null}
+
+        />
       </div>
     </div>
   );
