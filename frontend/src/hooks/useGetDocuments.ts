@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+const api_url = `http://localhost:5080/api/documents?userId=`
 
 export interface DocumentData {
   _id: string;
@@ -9,18 +10,19 @@ export interface DocumentData {
   updatedAt: string;
 }
 
-interface UseDocumentsResult {
+interface useGetDocumentsResult {
   documents: DocumentData[];
   error: string;
   loading: boolean;
   refetch: () => void;
 }
 
-const useDocuments = (userId: string): UseDocumentsResult => {
+const useGetDocuments = (userId: string): useGetDocumentsResult => {
   const [documents, setDocuments] = useState<DocumentData[]>([]);
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
+  // fetch all the documents for a user 
   const fetchDocuments = async () => {
     if (!userId) {
       setError("Missing userId parameter");
@@ -31,7 +33,7 @@ const useDocuments = (userId: string): UseDocumentsResult => {
 
     try {
       const response = await fetch(
-        `http://localhost:5080/api/documents?userId=${encodeURIComponent(userId)}`,
+        `${api_url}${encodeURIComponent(userId)}`,
         {
           method: "GET",
           headers: {
@@ -60,4 +62,4 @@ const useDocuments = (userId: string): UseDocumentsResult => {
   return { documents, error, loading, refetch: fetchDocuments };
 };
 
-export default useDocuments;
+export default useGetDocuments;

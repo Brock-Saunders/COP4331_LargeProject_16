@@ -39,14 +39,16 @@ const FileSideBar: React.FC<SideBarProps> = ({
           <div className="flex space-x-2">
             <button 
               className="bg-slate-700 px-3 py-1 rounded hover:bg-slate-600"
-              onClick={() => onAddnewFile()}
             >
               <ArrowDownAZ />
             </button>
             <button className="bg-slate-700 px-3 py-1 rounded hover:bg-slate-600">
               <ArrowUpAZ />
             </button>
-            <button className="bg-slate-700 px-3 py-1 rounded hover:bg-slate-600">
+            <button 
+              className="bg-slate-700 px-3 py-1 rounded hover:bg-slate-600"
+              onClick={() => onAddnewFile()}
+            >
               <FilePlus />
             </button>
           </div>
