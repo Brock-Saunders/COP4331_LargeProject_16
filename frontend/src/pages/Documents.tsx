@@ -9,7 +9,7 @@ import useGetDocuments, { DocumentData } from '../hooks/useGetDocuments';
 import useAddDocuments from '../hooks/useAddDocuments';
 import { title } from 'process';
 
-const userId = localStorage.getItem('userId');
+const userId = localStorage.getItem('userId') || '';
 
 const Documents: React.FC = () => {
   // Use the custom hook to fetch documents from your API.
