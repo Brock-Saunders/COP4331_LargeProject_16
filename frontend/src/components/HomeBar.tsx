@@ -11,16 +11,48 @@ interface HomebarProps {
 const Homebar: React.FC<HomebarProps> = ({ username, onLogout, onSearch }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [newDocumentTitle, setNewDocumentTitle] = useState('');
 
   const navigate = useNavigate();
-
-  const handleCreateNewDocument = () => {
-    navigate('/documents'); 
-  };
 
   const handleSearchClick = () => {
     onSearch(searchTerm); // Trigger the search with the current search term
   };
+
+  const handleCreateNewDocument = async () => {
+    const userData = localStorage.getItem("user_data");
+    if (!userData) {
+      console.error("User data not found in localStorage");
+      return;
+    }
+
+    const { userId } = JSON.parse(userData);
+
+    try {
+      const response = await fetch('http://localhost:5000/api/documents', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId, title: newDocumentTitle || 'Untitled Document', content: '' }),
+      });
+
+      const data = await response.json();
+
+      if (data.error) {
+        console.error("Error creating document:", data.error);
+      } else {
+        const { documentId } = data;
+        console.log("Document created with ID:", documentId);
+        setIsPopupOpen(false); // Close the popup
+        navigate(`/documents/${documentId}`); // Navigate to the new document
+      }
+    } catch (error) {
+      console.error("Error creating document:", error);
+    }
+  };
+
 
   return (
     <nav className="p-4 w-full fixed top-0 left-0 right-0 z-50 shadow-lg" style={{ backgroundColor: '#1f1f1f' }}>
@@ -44,8 +76,8 @@ const Homebar: React.FC<HomebarProps> = ({ username, onLogout, onSearch }) => {
         </div>
 
         <div className="flex items-center space-x-4">
-          <button
-            onClick={handleCreateNewDocument}
+        <button
+            onClick={() => setIsPopupOpen(true)} // Open the popup
             className="bg-gradient-to-br from-gray-400 to-gray-300 text-black px-4 py-2 rounded-lg hover:from-gray-300 hover:to-gray-200 transition"
           >
             Create New Document
@@ -73,6 +105,35 @@ const Homebar: React.FC<HomebarProps> = ({ username, onLogout, onSearch }) => {
           </div>
         </div>
       </div>
+      {/* Popup for creating a new document */}
+      {isPopupOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-xl font-bold mb-4">Create New Document</h2>
+            <input
+              type="text"
+              placeholder="Enter document title"
+              value={newDocumentTitle}
+              onChange={(e) => setNewDocumentTitle(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-gray-600"
+            />
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={() => setIsPopupOpen(false)} // Close the popup
+                className="px-4 py-2 bg-gray-300 text-black rounded-lg hover:bg-gray-200 transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleCreateNewDocument} // Create the document
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-400 transition"
+              >
+                Create
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };

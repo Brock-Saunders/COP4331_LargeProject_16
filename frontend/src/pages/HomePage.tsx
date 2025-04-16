@@ -13,8 +13,36 @@ const HomePage = () => {
         console.log("User logged out");
     };
 
-    const handleCreateNewDocument = () => {
-        console.log("Create new document clicked");
+    const handleCreateNewDocument = async () => {
+        const userData = localStorage.getItem("user_data");
+        if (!userData) {
+            console.error("User data not found in localStorage");
+            return;
+        }
+    
+        const { userId } = JSON.parse(userData);
+    
+        try {
+            const response = await fetch('http://localhost:5000/api/documents', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId, title: 'Untitled Document', content: '' }),
+            });
+    
+            const data = await response.json();
+    
+            if (data.error) {
+                console.error("Error creating document:", data.error);
+            } else {
+                const { documentId } = data;
+                console.log("Document created with ID:", documentId);
+                window.location.href = `/documents/${documentId}`; // Navigate to the new document
+            }
+        } catch (error) {
+            console.error("Error creating document:", error);
+        }
     };
 
     const handleSearch = async (searchTerm: string) => {
