@@ -3,6 +3,9 @@ import '../styles/RegisterStyles.css';
 import { useNavigate } from 'react-router-dom';
 
 function Register() {
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -13,7 +16,7 @@ function Register() {
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!username || !password || !confirmPassword) {
+    if (!firstname || !lastname || !email || !username || !password || !confirmPassword) {
       setMessage('Please fill in all fields.');
       return;
     }
@@ -23,7 +26,7 @@ function Register() {
       return;
     }
 
-    const obj = { login: username, password: password };
+    const obj = { firstname: firstname, lastname: lastname, email: email, login: username, password: password };
     const js = JSON.stringify(obj);
 
     const url = 'http://localhost:5000/api/users/register'; // Change to domain
@@ -61,6 +64,30 @@ function Register() {
             <h1 className="register-title">Register here!</h1>
             <p className="register-subtitle">Create an account to get started!</p>
 
+            <input
+              type="text"
+              placeholder="First Name"
+              className="register-input"
+              value={firstname}
+              onChange={(e) => setFirstname(e.target.value)}
+              disabled={loading}
+            />
+            <input
+              type="text"
+              placeholder="Last Name"
+              className="register-input"
+              value={lastname}
+              onChange={(e) => setLastname(e.target.value)}
+              disabled={loading}
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              className="register-input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
+            />
             <input
               type="text"
               placeholder="Username"
