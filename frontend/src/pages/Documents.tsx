@@ -12,9 +12,6 @@ import { useNavigate } from 'react-router-dom';
 import { title } from 'process';
 import { json } from 'stream/consumers';
 
-// TODO: redirect to login page when we cant get user id
-
-
 const Documents: React.FC = () => {
   const userDataStr = localStorage.getItem("user_data"); 
   const navigate = useNavigate(); 
@@ -25,7 +22,7 @@ const Documents: React.FC = () => {
   }
 
   if(!userId) {
-    navigate('/login'); 
+    navigate('/'); 
   }
 
   const [title, setTitle] = useState("");
@@ -38,9 +35,11 @@ const Documents: React.FC = () => {
   const lastSavedTitleRef = useRef<string>(title);
   const lastSavedContentRef = useRef<string>(content);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
-
-  
+  const [wordCount, setWordCount] = useState<number>(0);  
   const currFile = documents.find((doc: DocumentData) => doc._id === currFileId);
+  const [charCount, setCharCount] = useState<number>(0);
+
+
 
   useEffect(() => {
     if (documents.length > 0 && !documents.find(doc => doc._id === currFileId)) {
@@ -80,7 +79,15 @@ const Documents: React.FC = () => {
 
   const updateFileContent = (newContent: string) => {
     setContent(newContent); 
+    
     console.log("Updated file content:", newContent);
+
+    // counts words/chars on update
+    const textOnly = newContent.replace(/<[^>]+>/g, '').trim();
+    const words = textOnly.split(/\s+/).filter(Boolean);
+    setWordCount(words.length);
+    setCharCount(textOnly.length);
+    setWordCount(words.length);
   }
 
   // Handle adding a new file via the useAddDocuments hook.
@@ -131,8 +138,15 @@ const Documents: React.FC = () => {
   
     if (success) {
       setContent(newContent);
+      
       setLastSaved(new Date());
-  
+
+      // counts words /chars
+      const textOnly = newContent.replace(/<[^>]+>/g, '').trim();
+
+      const words = textOnly.split(/\s+/).filter(Boolean);
+      setWordCount(words.length);
+      setCharCount(textOnly.length);
       lastSavedTitleRef.current = title;
       lastSavedContentRef.current = newContent;
   
@@ -145,22 +159,20 @@ const Documents: React.FC = () => {
   
   
   return (
-    <div className="h-screen flex flex-col overflow-hidden">
+    <div className="h-screen flex flex-col overflow-hidden p-3">
       <div className='sticky top-0 border z-[999] border-gray-500 rounded-md overflow-hidden'>
         <EditorNavbar 
           onSave={handleSave}
         />
         <MenuBar editor={mainEditor} />
       </div>
-      <div className="h-190 flex flex-1 border-gray-500 rounded-md overflow-hidden p-3 min-h-0">
-        <aside className="w-full md:w-1/4 border-r border-b rounded-md border-gray-500 h-full min-h-0">
+      <div className="h-345 w-100 flex flex-1 border-gray-500 rounded-md overflow-hidden p-3">
           <FileSideBar
             files={documents}
             currentFileId={currFileId}
             onSelectFile={setCurrFileId}
-            onAddnewFile={handleAddFile}  // Pass the handler function here
+            onAddnewFile={handleAddFile}  
           />
-        </aside>
         <div className="flex-1 bg-zinc-900 border border-gray-500 rounded-md p-4 overflow-hidden min-h-0">
           {getAllDocsLoading && <p className="text-white">Loading...</p>}
           {getAllDocsError && <p className="text-red-400">{getAllDocsError}</p>}
@@ -188,7 +200,8 @@ const Documents: React.FC = () => {
         <EditorFooter 
           lastSaved={lastSaved}
           lastUpdated={currFile?.updatedAt ?? null}
-
+          wordCount={wordCount}
+          charCount={charCount}
         />
       </div>
     </div>

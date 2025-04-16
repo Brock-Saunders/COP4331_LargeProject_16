@@ -32,10 +32,10 @@ const FileSideBar: React.FC<SideBarProps> = ({
   onAddnewFile,
 }) => {
   return (
-    <div className= "sticky pr-2 rounded-md col-span-1 text-white">
-      <div className="h-screen border border-gray-500 bg-black p-5 rounded-lg shadow-md flex flex-col ">
+    <div className= "w-80 sticky pr-2 rounded-md col-span-1 text-white">
+      <div className="h-full border border-gray-500 bg-black rounded-lg shadow-md flex flex-col ">
         <div className="p-4 border-b border-gray-500 flex flex-row items-center justify-between">
-          <div className="text-2xl font-semibold">Notes</div>
+          <div className="text-2xl font-semibold">Docs</div>
           <div className="flex space-x-2">
             <button 
               className="bg-slate-700 px-3 py-1 rounded hover:bg-slate-600"
