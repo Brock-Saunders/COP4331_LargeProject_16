@@ -65,7 +65,7 @@ const Homebar: React.FC<HomebarProps> = ({ username, onLogout, onSearch }) => {
             placeholder="Search..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="bg-gradient-to-br from-gray-400 to-gray-300 text-black w-full px-4 py-2 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600"
+            className="bg-gradient-to-br from-gray-400 to-gray-300 text-black placeholder:text-black w-full px-4 py-2 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600"
           />
           <button
             onClick={handleSearchClick}
@@ -107,26 +107,26 @@ const Homebar: React.FC<HomebarProps> = ({ username, onLogout, onSearch }) => {
       </div>
       {/* Popup for creating a new document */}
       {isPopupOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Create New Document</h2>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
+          <div className="text-white p-6 rounded-lg shadow-lg w-96" style={{ backgroundColor: '#1f1f1f' }}>
+            <h2 className="text-2xl font-bold mb-4 text-center ">Create New Document</h2>
             <input
               type="text"
               placeholder="Enter document title"
               value={newDocumentTitle}
               onChange={(e) => setNewDocumentTitle(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-gray-600"
+              className="w-full px-4 py-2 bg-gradient-to-br from-gray-400 to-gray-300 text-black placeholder:text-black border border-gray-700 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-gray-600"
             />
             <div className="flex justify-end space-x-4">
               <button
                 onClick={() => setIsPopupOpen(false)} // Close the popup
-                className="px-4 py-2 bg-gray-300 text-black rounded-lg hover:bg-gray-200 transition"
+                className="px-4 py-2 bg-gradient-to-br from-gray-400 to-gray-300 text-black rounded-lg hover:from-gray-300 hover:to-gray-200 transition"
               >
                 Cancel
               </button>
               <button
                 onClick={handleCreateNewDocument} // Create the document
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-400 transition"
+                className="px-4 py-2 bg-gradient-to-br from-gray-400 to-gray-300 text-black rounded-lg hover:from-gray-300 hover:to-gray-200 transition"
               >
                 Create
               </button>
