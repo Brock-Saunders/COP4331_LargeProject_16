@@ -17,10 +17,11 @@ import { Download, Trash2, SaveIcon, User2Icon } from "lucide-react";
 interface EditorNavbarProps {
   onSave: () => void;
   onDeleteFile: () => void;
+  onDownload: () => void;
   disabled?: boolean;
 }
 
-const EditorNavbar: React.FC<EditorNavbarProps> = ({ onSave, onDeleteFile, disabled }) => {
+const EditorNavbar: React.FC<EditorNavbarProps> = ({ onSave, onDeleteFile, onDownload, disabled }) => {
   const [username, setUsername] = useState<string>('');
 
   useEffect(() => {
@@ -69,7 +70,9 @@ const EditorNavbar: React.FC<EditorNavbarProps> = ({ onSave, onDeleteFile, disab
                 Save
               </div>
             </button>
-            <button className="cursor-pointer items-center space-x-2 focus:outline-none">
+            <button className="cursor-pointer items-center space-x-2 focus:outline-none" 
+            onClick={onDownload} disabled={disabled}
+            >
               <div className="flex items-center justify-center gap-x-1.5">
                 <Download />
                 Download

@@ -181,6 +181,7 @@ const Documents: React.FC = () => {
         <EditorNavbar 
           onSave={handleSave}
           onDeleteFile={() => handleDeleteFile(currFileId)}
+          onDownload={() => currFile && downloadFile(currFile)}
         />
         <MenuBar editor={mainEditor} />
       </div>
