@@ -27,6 +27,8 @@ const useDeleteDocuments = (userId: string): UseDeleteDocumentResult => {
             return false;
         }
 
+        console.log("Deleting document with ID:", documentId, "for user:", userId);
+
         setLoading(true);
         setError("");
 
@@ -38,6 +40,7 @@ const useDeleteDocuments = (userId: string): UseDeleteDocumentResult => {
             });
 
             const data: DeleteDocumentResponse = await response.json();
+            console.log("Delete response:", data);
 
             if (data.error) {
                 setError(data.error);

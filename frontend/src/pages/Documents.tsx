@@ -8,6 +8,7 @@ import EditorFooter from '../components/EditorFooter';
 import useGetDocuments, { DocumentData } from '../hooks/useGetDocuments';
 import useAddDocuments from '../hooks/useAddDocuments';
 import useUpdateDocuments from '../hooks/useUpdateDocuments';
+import useDeleteDocuments from '../hooks/useDeleteDocuments';
 import { useNavigate } from 'react-router-dom';
 import { title } from 'process';
 import { json } from 'stream/consumers';
@@ -38,6 +39,7 @@ const Documents: React.FC = () => {
   const [wordCount, setWordCount] = useState<number>(0);  
   const currFile = documents.find((doc: DocumentData) => doc._id === currFileId);
   const [charCount, setCharCount] = useState<number>(0);
+  const { deleteDocument, loading: deleteLoading, error: deleteError } = useDeleteDocuments(userId);
 
 
 
@@ -156,6 +158,21 @@ const Documents: React.FC = () => {
       console.error("Auto-save failed:", updateError);
     }
   };
+
+  const handleDeleteFile = async (fileId: string) => {
+    const confirmed = window.confirm("Are you sure you want to delete this document?");
+    if (!confirmed) return;
+
+    console.log("Deleting document with ID:", fileId, "for user:", userId);
+
+    const success = await deleteDocument(fileId);
+    if (success) {
+      console.log("Document deleted successfully");
+      refetchGetAllDocs(); // Refetch documents to update the list
+    } else {
+      console.error("Failed to delete document:", deleteError);
+    }
+  };
   
   
   return (
@@ -163,6 +180,7 @@ const Documents: React.FC = () => {
       <div className='sticky top-0 border z-[999] border-gray-500 rounded-md overflow-hidden'>
         <EditorNavbar 
           onSave={handleSave}
+          onDeleteFile={() => handleDeleteFile(currFileId)}
         />
         <MenuBar editor={mainEditor} />
       </div>
