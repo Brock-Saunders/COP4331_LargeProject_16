@@ -26,7 +26,7 @@ function Register() {
       return;
     }
 
-    const obj = { firstname: firstname, lastname: lastname, email: email, login: username, password: password };
+    const obj = { firstName: firstname, lastName: lastname, email: email, login: username, password: password };
     const js = JSON.stringify(obj);
 
     const url = 'https://largeproj.alexcanapp.xyz/api/users/register'; // Change to domain
