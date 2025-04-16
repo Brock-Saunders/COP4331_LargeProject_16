@@ -55,17 +55,17 @@ app.post('/api/users/register', async (req, res, next) => {
         return res.status(200).json({ error: 'Invalid email format' });
     }
 
-    // check if email already taken
-    const db = client.db();
-    const echeck = await db.collection('Users').find({ Email: email }).toArray();
-    if (echeck.length > 0) {
-        return res.status(200).json({ error: 'Email already taken' });
-    }
-
     // check if login already taken
-    const lcheck = await db.collection('Users').find({ Login: login }).toArray();
+    const lcheck = await db.collection('Users').find({ login: login }).toArray();
     if (lcheck.length > 0) {
         return res.status(200).json({ error: 'Login already taken' });
+    }
+
+    // check if email already taken
+    const db = client.db();
+    const echeck = await db.collection('Users').find({ email: email }).toArray();
+    if (echeck.length > 0) {
+        return res.status(200).json({ error: 'Email already taken' });
     }
 
     // HASH PASSWORD
@@ -83,14 +83,16 @@ app.post('/api/users/register', async (req, res, next) => {
         updatedAt: new Date(),
     };
     var error = '';
+    var userId = -1;
     try {
         const db = client.db();
         const result = await db.collection('Users').insertOne(newUser);
-        console.log("user registered: " + result);
+        userId = result.insertedId.toString();
+        console.log("user created: " + userId);
     } catch (e) {
         error = e.toString();
     }
-    var ret = { error: error };
+    var ret = { userId: userId, error: error };
     res.status(200).json(ret);
 });
 
@@ -131,7 +133,7 @@ app.post('/api/users/login', async (req, res, next) => {
 // GET /api/users/username
 // Retrieve username (login) by userId
 app.get('/api/users/username', async (req, res, next) => {
-    const { userId } = req.body;
+    const { userId } = req.query;
 
     if (!userId) {
         return res.status(400).json({ error: 'Missing userId parameter' });
@@ -235,7 +237,7 @@ app.get('/api/documents/search', async (req, res, next) => {
 
     console.log("TRYING SEARCH DOCUMENTS");
 
-    const { userId, searchTerm } = req.body;
+    const { userId, searchTerm } = req.query;
 
     let error = '';
     let documents = [];
@@ -271,7 +273,7 @@ app.get('/api/documents/get', async (req, res, next) => {
 
     console.log("TRYING GET DOCUMENT");
 
-    const { userId, documentId } = req.body;
+    const { userId, documentId } = req.query;
 
     if (!/^[a-f\d]{24}$/i.test(documentId)) {
         return res.status(400).json({ error: 'Invalid document ID format' });

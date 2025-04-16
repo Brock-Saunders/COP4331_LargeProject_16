@@ -3,6 +3,9 @@ import '../styles/RegisterStyles.css';
 import { useNavigate } from 'react-router-dom';
 
 function Register() {
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -10,16 +13,38 @@ function Register() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  function handleRegister(e: React.FormEvent) {
+  async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!username || !password || !confirmPassword) {
+    if (!firstname || !lastname || !email || !username || !password || !confirmPassword) {
       setMessage('Please fill in all fields.');
       return;
     }
 
     if (password !== confirmPassword) {
       setMessage('Passwords do not match.');
+      return;
+    }
+
+    const obj = { firstname: firstname, lastname: lastname, email: email, login: username, password: password };
+    const js = JSON.stringify(obj);
+
+    const url = 'http://localhost:5000/api/users/register'; // Change to domain
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        body: js,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const res = JSON.parse(await response.text());
+      console.log('Register API response:', res);
+
+    } catch (error) {
+      console.error('Error during registration:', error);
+      setMessage('An error occurred. Please try again later.');
       return;
     }
 
@@ -39,6 +64,30 @@ function Register() {
             <h1 className="register-title">Register here!</h1>
             <p className="register-subtitle">Create an account to get started!</p>
 
+            <input
+              type="text"
+              placeholder="First Name"
+              className="register-input"
+              value={firstname}
+              onChange={(e) => setFirstname(e.target.value)}
+              disabled={loading}
+            />
+            <input
+              type="text"
+              placeholder="Last Name"
+              className="register-input"
+              value={lastname}
+              onChange={(e) => setLastname(e.target.value)}
+              disabled={loading}
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              className="register-input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
+            />
             <input
               type="text"
               placeholder="Username"
