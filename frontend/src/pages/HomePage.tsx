@@ -127,7 +127,51 @@ const HomePage = () => {
                 onSearch={handleSearch}
             />
             <div className="pt-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-                <DocumentList documents={documents} error={error} />
+            <DocumentList
+                documents={documents}
+                error={error}
+                onDelete={async (docId) => {
+                    const confirmed = window.confirm("Are you sure you want to delete this document?");
+                    if (!confirmed) return;
+
+                    const userData = localStorage.getItem("user_data");
+                    if (!userData) {
+                        console.error("User data not found in localStorage");
+                        return;
+                    }
+
+                    const { userId } = JSON.parse(userData);
+
+                    try {
+                        console.log("Deleting document with ID:", docId);
+                        const response = await fetch(`https://largeproj.alexcanapp.xyz/api/documents/delete`, {
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId, documentId: docId }),
+                    });
+
+                    const data = await response.json();
+                    console.log("Delete response:", data);
+                    if (data.error) {
+                        console.error("Error deleting document:", data.error);
+                    } else {
+                        console.log("Document deleted successfully");
+                        setDocuments((prevDocs) => prevDocs.filter((doc) => doc._id !== docId));
+                    }
+                    } catch (error) {
+                    console.error("Error deleting document:", error);
+                    }
+                }}
+                onDownload={(doc) => {
+                    const element = document.createElement('a');
+                    const fileBlob = new Blob([doc.content], { type: 'text/html' });
+                    element.href = URL.createObjectURL(fileBlob);
+                    element.download = `${doc.title}.html`;
+                    document.body.appendChild(element);
+                    element.click();
+                    document.body.removeChild(element);
+                }}
+            />
             </div>
         </div>
     );

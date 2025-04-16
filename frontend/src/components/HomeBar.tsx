@@ -6,9 +6,10 @@ interface HomebarProps {
   username: string;
   onLogout: () => void;
   onSearch: (searchTerm: string) => void;
+  onCreateNewDocument: () => Promise<void>;
 }
 
-const Homebar: React.FC<HomebarProps> = ({ username, onLogout, onSearch }) => {
+const Homebar: React.FC<HomebarProps> = ({ username, onLogout, onSearch, onCreateNewDocument }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [isPopupOpen, setIsPopupOpen] = useState(false);
