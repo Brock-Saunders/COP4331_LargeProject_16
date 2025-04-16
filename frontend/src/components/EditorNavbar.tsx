@@ -24,7 +24,12 @@ export const AcmeLogo = () => {
   );
 };
 
-const EditorNavbar = () => {
+interface EditorNavbarProps {
+  onSave: () => void; 
+  disabled?: boolean; 
+}
+
+const EditorNavbar: React.FC<EditorNavbarProps> = ({ onSave, disabled }) => {
   return (
     <Navbar className="rounded-md border-gray-500 bg-zinc-900">
       <NavbarBrand>
@@ -34,12 +39,12 @@ const EditorNavbar = () => {
       <NavbarContent justify="center">
         <NavbarItem>
           <div className="flex gap-4">
-            <Button className="cursor-pointer items-center space-x-2">
+            <button className="cursor-pointer items-center space-x-2" onClick={onSave} disabled={disabled}>
               <div className="flex items-center justify-center gap-x-1.5">
                 <SaveIcon />
                 Save
               </div>
-            </Button>
+            </button>
             <Button className="cursor-pointer items-center space-x-2">
               <div className="flex items-center justify-center gap-x-1.5">
                 <Download />

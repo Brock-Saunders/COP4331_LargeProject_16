@@ -17,7 +17,7 @@ const HeaderEditor: React.FC<HeaderEditorProps> = ({ title, setTitle, onEnter })
         const newEditor = new Editor({
           element: headerContainerRef.current, 
           extensions: [StarterKit], 
-          content: `<h1>${title}</h1>`,
+          content: title,
           editorProps: {
             attributes: {
               class: "bg-dark-gray-500 p-4 w-full h-full focus:outline-none", 

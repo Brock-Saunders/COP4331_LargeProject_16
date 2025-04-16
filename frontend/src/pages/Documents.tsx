@@ -7,6 +7,7 @@ import EditorNavbar from '../components/EditorNavbar';
 import EditorFooter from '../components/EditorFooter';
 import useGetDocuments, { DocumentData } from '../hooks/useGetDocuments';
 import useAddDocuments from '../hooks/useAddDocuments';
+import useUpdateDocuments from '../hooks/useUpdateDocuments';
 import { useNavigate } from 'react-router-dom';
 import { title } from 'process';
 import { json } from 'stream/consumers';
@@ -27,43 +28,36 @@ const Documents: React.FC = () => {
     navigate('/login'); 
   }
 
-
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState(""); 
   const { documents, error: getAllDocsError, loading: getAllDocsLoading, refetch: refetchGetAllDocs } = useGetDocuments(userId);
   const { addDocument, loading: addDocLoading, error: addDocError } = useAddDocuments(userId);
   const [mainEditor, setMainEditor] = useState<any>(null);
   const [currFileId, setCurrFileId] = useState<string>("");
+  const { updateDocument, loading: updateLoading, error: updateError} = useUpdateDocuments(userId); 
 
-
-
+  const currFile = documents.find((doc: DocumentData) => doc._id === currFileId);
 
   useEffect(() => {
     if (documents.length > 0 && !documents.find(doc => doc._id === currFileId)) {
       setCurrFileId(documents[0]._id);
     }
-  }, [documents, currFileId]);
 
-  const currFile = documents.find((doc: DocumentData) => doc._id === currFileId);
+    if (currFile) {
+      setTitle(currFile.title); 
+      setContent(currFile.content)
+    }
 
-  // TODO: replace this with login hook 
+  }, [documents, currFileId, currFile]);
 
-  // TODO: update title to actual db 
   const updateFileTitle = (newTitle: string) => {
-    const updatedDocs = documents.map((doc: DocumentData) =>
-      doc._id === currFileId
-        ? { ...doc, title: newTitle, updatedAt: new Date().toISOString() }
-        : doc
-    );
-    console.log("Update file title:", updatedDocs);
+    setTitle(newTitle); 
+    console.log("Update file title:", newTitle);
   }
 
-  // TODO: update content to acutal db 
   const updateFileContent = (newContent: string) => {
-    const updatedDocs = documents.map((doc: DocumentData) =>
-      doc._id === currFileId
-        ? { ...doc, content: newContent, updatedAt: new Date().toISOString() }
-        : doc
-    );
-    console.log("Updated file content:", updatedDocs);
+    setContent(newContent); 
+    console.log("Updated file content:", newContent);
   }
 
   // Handle adding a new file via the useAddDocuments hook.
@@ -100,10 +94,28 @@ const Documents: React.FC = () => {
     }
   }
 
+  const handleSave = async () => {
+    if (!currFile || !mainEditor) return;
+  
+    const newContent = mainEditor.getHTML();
+  
+    const success = await updateDocument(currFile._id, title, newContent);
+  
+    if (success) {
+      console.log("Document successfully updated");
+      setContent(newContent); 
+      refetchGetAllDocs(); // optionally refresh file list
+    } else {
+      console.error("Error updating document:", updateError);
+    }
+  };
+  
   return (
     <div className="h-screen flex flex-col overflow-hidden">
       <div className='sticky top-0 border z-[999] border-gray-500 rounded-md overflow-hidden'>
-        <EditorNavbar />
+        <EditorNavbar 
+          onSave={handleSave}
+        />
         <MenuBar editor={mainEditor} />
       </div>
       <div className="h-190 flex flex-1 border-gray-500 rounded-md overflow-hidden p-3 min-h-0">
@@ -122,14 +134,14 @@ const Documents: React.FC = () => {
             <div className="flex flex-col h-full">
               <div className="sticky top-0 bg-zinc-900 z-10">
                 <HeaderEditor
-                  title={currFile.title}
+                  title={title}
                   setTitle={updateFileTitle}
                   onEnter={handleHeaderEnter}
                 />
               </div>
               <div className="flex-1 overflow-auto">
                 <TextEditor
-                  content={currFile.content}
+                  content={content}
                   setContent={updateFileContent}
                   onEditorReady={handleEditorReady}
                 />
