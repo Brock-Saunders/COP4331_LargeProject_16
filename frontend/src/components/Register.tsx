@@ -41,6 +41,10 @@ function Register() {
       });
       const res = JSON.parse(await response.text());
       console.log('Register API response:', res);
+      if (res.error) {
+        setMessage(res.error);
+        return;
+      }
 
     } catch (error) {
       console.error('Error during registration:', error);
