@@ -9,15 +9,15 @@ import useGetDocuments, { DocumentData } from '../hooks/useGetDocuments';
 import useAddDocuments from '../hooks/useAddDocuments';
 import { title } from 'process';
 
-const userId = "67fc0882d6f7058768d3a2d7";
+const userId = localStorage.getItem('userId') || '';
 
 const Documents: React.FC = () => {
   // Use the custom hook to fetch documents from your API.
-  const { documents, error: getAllDocsError, loading: getAllDocsLoading, refetch: refetchGetAllDocs } = useGetDocuments(userId); 
+  const { documents, error: getAllDocsError, loading: getAllDocsLoading, refetch: refetchGetAllDocs } = useGetDocuments(userId);
   // Use the custom hook to add a new document.
   const { addDocument, loading: addDocLoading, error: addDocError } = useAddDocuments(userId);
-  
-  const [mainEditor, setMainEditor] = useState<any>(null); 
+
+  const [mainEditor, setMainEditor] = useState<any>(null);
   const [currFileId, setCurrFileId] = useState<string>("");
 
   // Update currFileId when documents are fetched and non-empty.
@@ -27,7 +27,7 @@ const Documents: React.FC = () => {
     }
   }, [documents, currFileId]);
 
-  const currFile = documents.find((doc: DocumentData) => doc._id === currFileId); 
+  const currFile = documents.find((doc: DocumentData) => doc._id === currFileId);
 
   // TODO: replace this with login hook 
 
@@ -38,7 +38,7 @@ const Documents: React.FC = () => {
         ? { ...doc, title: newTitle, updatedAt: new Date().toISOString() }
         : doc
     );
-    console.log("Update file title:", updatedDocs); 
+    console.log("Update file title:", updatedDocs);
   }
 
   // TODO: update content to acutal db 
@@ -50,12 +50,12 @@ const Documents: React.FC = () => {
     );
     console.log("Updated file content:", updatedDocs);
   }
-  
+
   // Handle adding a new file via the useAddDocuments hook.
-  const handleAddFile = async() => {
+  const handleAddFile = async () => {
     const newTitle = `New Document ${documents.length + 1}`;
     const newContent = "<p>Your New Document!!</p>";
-    const newId = await addDocument(newTitle, newContent); 
+    const newId = await addDocument(newTitle, newContent);
     if (newId) {
       console.log("Document created with id:", newId);
       // Refetch documents to update the list in the sidebar.
@@ -64,7 +64,7 @@ const Documents: React.FC = () => {
       console.error("Failed to create document", addDocError);
     }
   }
-    
+
   const downloadFile = (file: DocumentData) => {
     const element = document.createElement('a');
     const fileBlob = new Blob([file.content], { type: 'text/html' });
@@ -74,17 +74,17 @@ const Documents: React.FC = () => {
     element.click();
     document.body.removeChild(element);
   }
-    
+
   const handleEditorReady = (editor: any) => {
-    setMainEditor(editor); 
+    setMainEditor(editor);
   }
-    
+
   const handleHeaderEnter = () => {
     if (mainEditor) {
       mainEditor.commands.focus('end');
     }
   }
-    
+
   return (
     <div className="h-screen flex flex-col overflow-hidden">
       <div className='sticky top-0 border z-[999] border-gray-500 rounded-md overflow-hidden'>
@@ -99,7 +99,7 @@ const Documents: React.FC = () => {
             onSelectFile={setCurrFileId}
             onAddnewFile={handleAddFile}  // Pass the handler function here
           />
-        </aside>  
+        </aside>
         <div className="flex-1 bg-zinc-900 border border-gray-500 rounded-md p-4 overflow-hidden min-h-0">
           {getAllDocsLoading && <p className="text-white">Loading...</p>}
           {getAllDocsError && <p className="text-red-400">{getAllDocsError}</p>}

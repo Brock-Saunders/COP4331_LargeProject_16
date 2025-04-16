@@ -42,32 +42,32 @@ function Login({ onLogin }: LoginProps) {
       console.log("Login API response:", res);
 
       // Check for error in the response
-    if (res.error) {
-      setMessage(res.error); // Display the error message from the API
+      if (res.error) {
+        setMessage(res.error); // Display the error message from the API
+        return;
+      }
+
+      // Check if the ID is valid
+      if (!res.id || res.id <= 0) {
+        setMessage('User/Password combination incorrect');
+        return;
+      }
+
+      // Save user data to localStorage
+      const user = {
+        firstName: res.firstName,
+        lastName: res.lastName,
+        userId: res.id,
+        login: res.login,
+      };
+      localStorage.setItem('user_data', JSON.stringify(user));
+      setMessage('');
+      window.location.href = '/home';
+    } catch (error: any) {
+      alert(error.toString());
       return;
     }
-
-    // Check if the ID is valid
-    if (!res.id || res.id <= 0) {
-      setMessage('User/Password combination incorrect');
-      return;
-    }
-
-    // Save user data to localStorage
-    const user = {
-      firstName: res.firstName,
-      lastName: res.lastName,
-      id: res.id,
-      login: res.login,
-    };
-    localStorage.setItem('user_data', JSON.stringify(user));
-    setMessage('');
-    window.location.href = '/home';
-  } catch (error: any) {
-    alert(error.toString());
-    return;
   }
-} 
 
   return (
     <div className="login-wrapper">
@@ -75,10 +75,10 @@ function Login({ onLogin }: LoginProps) {
         <div className="login-left">
           <div className="login-form">
             <h1 className="login-title">
-            Notes App
+              Notes App
             </h1>
-          <p className="login-subtitle">Login to your account!</p>
-         
+            <p className="login-subtitle">Login to your account!</p>
+
             <input
               type="text"
               id="loginName"
@@ -102,7 +102,7 @@ function Login({ onLogin }: LoginProps) {
           </div>
         </div>
         <div className="login-right">
-        <h2 className="new-here-heading">New Here?</h2>
+          <h2 className="new-here-heading">New Here?</h2>
           <p>Sign up and discover a great amount of new opportunities!</p>
           <a href="/register" className="signup-button">Sign Up</a>
         </div>
