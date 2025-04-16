@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState , useEffect} from "react";
 import {
   FileText,
   FilePlus,
   ArrowDownAZ,
   ArrowUpAZ,
-  Trash2
+  Trash2,
+  Clock,
 } from "lucide-react";
 
 import "../styles/FileSideBar.css";
@@ -31,6 +32,28 @@ const FileSideBar: React.FC<SideBarProps> = ({
   onSelectFile,
   onAddnewFile,
 }) => {
+  const [sortedFiles, setSortedFiles] = useState<File[]>(files);
+
+  // Update sortedFiles whenever the files prop changes
+  useEffect(() => {
+    setSortedFiles(files);
+  }, [files]);
+
+  const sortFilesAscending = () => {
+    const sorted = [...sortedFiles].sort((a, b) => a.title.localeCompare(b.title));
+    setSortedFiles(sorted);
+  };
+
+  const sortFilesDescending = () => {
+    const sorted = [...sortedFiles].sort((a, b) => b.title.localeCompare(a.title));
+    setSortedFiles(sorted);
+  };
+
+  const resetToLastUpdated = () => {
+    const sorted = [...files].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+    setSortedFiles(sorted);
+  };
+
   return (
     <div className= "w-80 sticky pr-2 rounded-md col-span-1 text-white">
       <div className="h-full border border-gray-500 bg-black rounded-lg shadow-md flex flex-col ">
@@ -39,26 +62,36 @@ const FileSideBar: React.FC<SideBarProps> = ({
           <div className="flex space-x-2">
             <button 
               className="bg-slate-700 px-3 py-1 rounded hover:bg-slate-600"
+              onClick={sortFilesAscending}
             >
-              <ArrowDownAZ />
+              <ArrowDownAZ size={20} />
             </button>
-            <button className="bg-slate-700 px-3 py-1 rounded hover:bg-slate-600">
-              <ArrowUpAZ />
+            <button className="bg-slate-700 px-3 py-1 rounded hover:bg-slate-600"
+            onClick={sortFilesDescending}
+            >
+              <ArrowUpAZ size={20} />
+            </button>
+            <button
+              className="bg-slate-700 px-3 py-1 rounded hover:bg-slate-600"
+              onClick={resetToLastUpdated}
+            >
+              <Clock size={20} />
             </button>
             <button 
               className="bg-slate-700 px-3 py-1 rounded hover:bg-slate-600"
               onClick={() => onAddnewFile()}
             >
-              <FilePlus />
+              <FilePlus size={20} />
             </button>
           </div>
         </div>
         <div className="flex-1 overflow-y-auto p-6 no-scrollbar">
           <ul className="space-y-2">
-            {files.map((file: File) => (
+            {sortedFiles.map((file: File) => (
               <li
                 key={file._id}
-                className={`flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-slate-500 ${file._id === currentFileId ? "bg-slate-600" : "hover:bg-slate-700"}`}
+                className={`flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-slate-500 
+                ${file._id === currentFileId ? "bg-slate-600" : "hover:bg-slate-700"}`}
                 onClick={() => onSelectFile(file._id)}
               >
                 <FileText size={20} />
