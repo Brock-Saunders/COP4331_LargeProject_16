@@ -6,6 +6,7 @@ import {
   ArrowUpAZ,
   Trash2,
   Clock,
+  Download,
 } from "lucide-react";
 
 import "../styles/FileSideBar.css";
@@ -24,6 +25,8 @@ interface SideBarProps {
   currentFileId: string;
   onSelectFile: (fileId: string) => void;
   onAddnewFile: () => void;
+  onDeleteFile: () => void;
+  onDownload: () => void;
 }
 
 const FileSideBar: React.FC<SideBarProps> = ({
@@ -31,6 +34,8 @@ const FileSideBar: React.FC<SideBarProps> = ({
   currentFileId,
   onSelectFile,
   onAddnewFile,
+  onDeleteFile,
+  onDownload,
 }) => {
   const [sortedFiles, setSortedFiles] = useState<File[]>(files);
 
@@ -92,10 +97,32 @@ const FileSideBar: React.FC<SideBarProps> = ({
                 key={file._id}
                 className={`flex items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-slate-500 
                 ${file._id === currentFileId ? "bg-slate-600" : "hover:bg-slate-700"}`}
+                >
+                <div
+                className="flex-1 flex items-center gap-2"
                 onClick={() => onSelectFile(file._id)}
               >
                 <FileText size={20} />
                 <span className="truncate">{file.title}</span>
+              </div>
+              <button
+                className="bg-slate-700 px-3 py-1 rounded hover:bg-slate-600"
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent triggering onSelectFile
+                  onDeleteFile(file._id);
+                }}
+              >
+                <Trash2 size={16} />
+              </button>
+              <button
+                className="bg-slate-700 px-3 py-1 rounded hover:bg-slate-600"
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent triggering onSelectFile
+                  onDownload(file);
+                }}
+              >
+                <Download size={16} />
+              </button>
                 </li>
             ))}
           </ul>
