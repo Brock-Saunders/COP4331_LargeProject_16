@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import FileSideBar from '../components/FileSideBar';
 import TextEditor from '../components/TextEditor';
 import MenuBar from '../components/MenuBar';
@@ -35,7 +35,9 @@ const Documents: React.FC = () => {
   const [mainEditor, setMainEditor] = useState<any>(null);
   const [currFileId, setCurrFileId] = useState<string>("");
   const { updateDocument, loading: updateLoading, error: updateError} = useUpdateDocuments(userId); 
-
+  const lastSavedTitleRef = useRef<string>(title);
+  const lastSavedContentRef = useRef<string>(content);
+  
   const currFile = documents.find((doc: DocumentData) => doc._id === currFileId);
 
   useEffect(() => {
@@ -49,6 +51,25 @@ const Documents: React.FC = () => {
     }
 
   }, [documents, currFileId, currFile]);
+
+  // auto save 
+  useEffect(() => {
+    if (!currFile || !mainEditor) return;
+  
+    const newContent = mainEditor.getHTML();
+  
+    const hasChanges =
+      title !== lastSavedTitleRef.current || newContent !== lastSavedContentRef.current;
+  
+    if (!hasChanges) return;
+  
+    const timer = setTimeout(() => {
+      handleSave();
+    }, 5000);
+  
+    return () => clearTimeout(timer);
+  }, [title, content]);
+  
 
   const updateFileTitle = (newTitle: string) => {
     setTitle(newTitle); 
@@ -99,16 +120,27 @@ const Documents: React.FC = () => {
   
     const newContent = mainEditor.getHTML();
   
+    // Only save if something changed
+    if (title === lastSavedTitleRef.current && newContent === lastSavedContentRef.current) {
+      return;
+    }
+  
     const success = await updateDocument(currFile._id, title, newContent);
   
     if (success) {
-      console.log("Document successfully updated");
-      setContent(newContent); 
-      refetchGetAllDocs(); // optionally refresh file list
+      setContent(newContent);
+      setLastSaved(new Date());
+  
+      lastSavedTitleRef.current = title;
+      lastSavedContentRef.current = newContent;
+  
+      refetchGetAllDocs();
+      console.log("Document auto-saved");
     } else {
-      console.error("Error updating document:", updateError);
+      console.error("Auto-save failed:", updateError);
     }
   };
+  
   
   return (
     <div className="h-screen flex flex-col overflow-hidden">
