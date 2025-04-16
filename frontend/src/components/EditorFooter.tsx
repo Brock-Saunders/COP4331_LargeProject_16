@@ -1,9 +1,12 @@
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button} from "@heroui/react";
 
 interface EditorFooterProps {
-  lastSaved: Date | null; 
-  lastUpdated: string | null; 
+  lastSaved: Date | null;
+  lastUpdated: string | null;
+  wordCount: number;
+  charCount: number; 
 }
+
 
 
 const formatTime = (date: Date): string => {
@@ -15,18 +18,18 @@ const formatTime = (date: Date): string => {
   const days = Math.floor(diffMs / (1000 * 60 * 60 * 24)); 
 
   if (minutes < 1) {
-    return "Saved just now";
+    return "Last Saved just now";
   } else if (minutes < 60) {
-    return `Saved ${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+    return `Last Saved ${minutes} minute${minutes > 1 ? "s" : ""} ago`;
   } else if (hours < 24) {
-    return `Saved ${hours} hour${hours > 1 ? "s" : ""} ago`;
+    return `Last Saved ${hours} hour${hours > 1 ? "s" : ""} ago`;
   }
 
-  return `Saved ${days} day${days > 1 ? "s" : ""} ago`;
+  return `Last Saved ${days} day${days > 1 ? "s" : ""} ago`;
 };
 
 // creates new date or gets date from db 
-const EditorFooter: React.FC<EditorFooterProps> = ({ lastSaved, lastUpdated }) => {
+const EditorFooter: React.FC<EditorFooterProps> = ({ lastSaved, lastUpdated, wordCount, charCount }) => {
   const displayTime = lastSaved ?? (lastUpdated ? new Date(lastUpdated) : null);
 
   return (
@@ -42,10 +45,10 @@ const EditorFooter: React.FC<EditorFooterProps> = ({ lastSaved, lastUpdated }) =
         <NavbarContent justify="end">
             <NavbarItem>
             <label className="p-4">
-                Word Count: 4
+              Word Count: {wordCount}
             </label>
             <label className="p-4">
-                Character Count: 16
+                Character Count: {charCount}
             </label>
             </NavbarItem>
         </NavbarContent>  
