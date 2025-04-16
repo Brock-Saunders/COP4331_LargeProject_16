@@ -31,7 +31,7 @@ const EditorNavbar: React.FC<EditorNavbarProps> = ({ onSave, disabled }) => {
 
     if (!userId) return;
 
-    fetch(`http://localhost:5080/api/users/username?userId=${userId}`)
+    fetch(`https://largeproj.alexcanapp.xyz/api/users/username?userId=${userId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.username) {

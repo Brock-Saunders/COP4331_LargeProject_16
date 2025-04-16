@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const api_url = `http://localhost:5000/api/documents/delete`;
+const api_url = `https://largeproj.alexcanapp.xyz/api/documents/delete`;
 
 interface DeleteDocumentResponse {
     error: string;

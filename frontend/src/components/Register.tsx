@@ -29,7 +29,7 @@ function Register() {
     const obj = { firstname: firstname, lastname: lastname, email: email, login: username, password: password };
     const js = JSON.stringify(obj);
 
-    const url = 'http://localhost:5000/api/users/register'; // Change to domain
+    const url = 'https://largeproj.alexcanapp.xyz/api/users/register'; // Change to domain
 
     try {
       const response = await fetch(url, {

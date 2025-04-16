@@ -30,7 +30,7 @@ const Homebar: React.FC<HomebarProps> = ({ username, onLogout, onSearch }) => {
     const { userId } = JSON.parse(userData);
 
     try {
-      const response = await fetch('http://localhost:5000/api/documents', {
+      const response = await fetch('https://largeproj.alexcanapp.xyz/api/documents', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ const Homebar: React.FC<HomebarProps> = ({ username, onLogout, onSearch }) => {
         </div>
 
         <div className="flex items-center space-x-4">
-        <button
+          <button
             onClick={() => setIsPopupOpen(true)} // Open the popup
             className="bg-gradient-to-br from-gray-400 to-gray-300 text-black px-4 py-2 rounded-lg hover:from-gray-300 hover:to-gray-200 transition"
           >

@@ -19,20 +19,20 @@ const HomePage = () => {
             console.error("User data not found in localStorage");
             return;
         }
-    
+
         const { userId } = JSON.parse(userData);
-    
+
         try {
-            const response = await fetch('http://localhost:5000/api/documents', {
+            const response = await fetch('https://largeproj.alexcanapp.xyz/api/documents', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ userId, title: 'Untitled Document', content: '' }),
             });
-    
+
             const data = await response.json();
-    
+
             if (data.error) {
                 console.error("Error creating document:", data.error);
             } else {
@@ -52,7 +52,7 @@ const HomePage = () => {
         const { userId: userId } = JSON.parse(userData);
 
         try {
-            const response = await fetch(`http://localhost:5000/api/documents/search?userId=${encodeURIComponent(userId)}&searchTerm=${encodeURIComponent(searchTerm)}`);
+            const response = await fetch(`https://largeproj.alexcanapp.xyz/api/documents/search?userId=${encodeURIComponent(userId)}&searchTerm=${encodeURIComponent(searchTerm)}`);
             const data = await response.json();
 
             if (data.error) {
@@ -79,7 +79,7 @@ const HomePage = () => {
             const { userId: userId } = JSON.parse(userData);
 
             try {
-                const response = await fetch(`http://localhost:5000/api/documents?userId=${encodeURIComponent(userId)}`);
+                const response = await fetch(`https://largeproj.alexcanapp.xyz/api/documents?userId=${encodeURIComponent(userId)}`);
                 const data = await response.json();
 
                 if (data.error) {
