@@ -206,6 +206,8 @@ const Documents: React.FC = () => {
             currentFileId={currFileId}
             onSelectFile={setCurrFileId}
             onAddnewFile={handleAddFile}  
+            onDeleteFile={handleDeleteFile} 
+            onDownload={(file) => downloadFile(file)} 
           />
         <div className="flex-1 bg-zinc-900 border border-gray-500 rounded-md p-4 overflow-hidden min-h-0">
           {getAllDocsLoading && <p className="text-white">Loading...</p>}
