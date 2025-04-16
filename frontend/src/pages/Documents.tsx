@@ -12,11 +12,13 @@ import useDeleteDocuments from '../hooks/useDeleteDocuments';
 import { useNavigate } from 'react-router-dom';
 import { title } from 'process';
 import { json } from 'stream/consumers';
+import { useParams } from 'react-router-dom';
 
 const Documents: React.FC = () => {
   const userDataStr = localStorage.getItem("user_data"); 
   const navigate = useNavigate(); 
   let userId = null; 
+
   if (userDataStr) {
     const userData = JSON.parse(userDataStr); 
     userId = userData.userId; 
@@ -26,12 +28,13 @@ const Documents: React.FC = () => {
     navigate('/'); 
   }
 
+  const { docId } = useParams<{ docId: string }>(); // Extract document ID from URL
   const [title, setTitle] = useState("");
   const [content, setContent] = useState(""); 
   const { documents, error: getAllDocsError, loading: getAllDocsLoading, refetch: refetchGetAllDocs } = useGetDocuments(userId);
   const { addDocument, loading: addDocLoading, error: addDocError } = useAddDocuments(userId);
   const [mainEditor, setMainEditor] = useState<any>(null);
-  const [currFileId, setCurrFileId] = useState<string>("");
+  const [currFileId, setCurrFileId] = useState<string>(docId || "");
   const { updateDocument, loading: updateLoading, error: updateError} = useUpdateDocuments(userId); 
   const lastSavedTitleRef = useRef<string>(title);
   const lastSavedContentRef = useRef<string>(content);
@@ -44,16 +47,28 @@ const Documents: React.FC = () => {
 
 
   useEffect(() => {
-    if (documents.length > 0 && !documents.find(doc => doc._id === currFileId)) {
-      setCurrFileId(documents[0]._id);
+    if (documents.length > 0) {
+      // Set currFileId based on docId from URL or default to the first document
+      setCurrFileId((prevId) => {
+        if (prevId) return prevId; // Keep the existing ID if already set
+        if (docId && documents.find((doc) => doc._id === docId)) return docId; // Use docId from URL if valid
+        return documents[0]._id; // Default to the first document
+      });
     }
+  }, [documents, docId]);
 
+  useEffect(() => {
+    console.log("docId from URL:", docId);
+    console.log("Documents array:", documents);
+    console.log("Current File ID:", currFileId);
+  }, [docId, documents, currFileId]);
+  
+  useEffect(() => {
     if (currFile) {
-      setTitle(currFile.title); 
-      setContent(currFile.content)
+      setTitle(currFile.title);
+      setContent(currFile.content);
     }
-
-  }, [documents, currFileId, currFile]);
+  }, [currFile]);
 
   // auto save 
   useEffect(() => {

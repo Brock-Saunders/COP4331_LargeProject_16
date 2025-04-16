@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface Document {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   updatedAt: string;
@@ -25,16 +25,18 @@ const DocumentList: React.FC<DocumentListProps> = ({ documents, error }) => {
   }
 
   const handleCardClick = (docId: string) => {
+    console.log("Documents array:", documents);
     navigate(`/documents/${docId}`); // Navigate to the document editor page
+    console.log("Doc Id click:", docId)
   };
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4" style={{ backgroundColor: '#1f1f1f' }}>
       {documents.map((doc, index) => (
         <div
-          key={doc.id || index} // Use `doc.id` if available, otherwise fallback to `index`
+          key={doc._id || index} // Use `doc.id` if available, otherwise fallback to `index`
           className="bg-gradient-to-br from-gray-400 to-gray-300 text-black shadow-md rounded-lg p-4 hover:shadow-lg transition"
-          onClick={() => handleCardClick(doc.id)} // Navigate to document on card click
+          onClick={() => handleCardClick(doc._id)} // Navigate to document on card click
         >
           <h3 className="text-lg font-bold">{doc.title}</h3>
           <p className="text-gray-700">{doc.description}</p>
