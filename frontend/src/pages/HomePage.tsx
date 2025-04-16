@@ -21,7 +21,7 @@ const HomePage = () => {
         const userData = localStorage.getItem("user_data");
         if (!userData) return;
 
-        const { id: userId } = JSON.parse(userData);
+        const { userId: userId } = JSON.parse(userData);
 
         try {
             const response = await fetch(`http://localhost:5000/api/documents/search?userId=${encodeURIComponent(userId)}&searchTerm=${encodeURIComponent(searchTerm)}`);
@@ -48,7 +48,7 @@ const HomePage = () => {
                 return;
             }
 
-            const { id: userId } = JSON.parse(userData);
+            const { userId: userId } = JSON.parse(userData);
 
             try {
                 const response = await fetch(`http://localhost:5000/api/documents?userId=${encodeURIComponent(userId)}`);
