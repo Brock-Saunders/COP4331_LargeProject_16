@@ -7,7 +7,7 @@ import Paragraph from '@tiptap/extension-paragraph';
 import Heading from '@tiptap/extension-heading';
 import Codeblock from '@tiptap/extension-code-block';
 
-//import '../styles/editor.css'
+import '../styles/editor.css'
 
 interface TextEditorProps {
   content: string;
@@ -20,7 +20,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ content, setContent, onEditorRe
 
   useEffect(() => {
     const newEditor = new Editor({
-      extensions: [StarterKit, Document, Paragraph, Text, Codeblock],
+      extensions: [StarterKit],
       content: content,
       autofocus: false,
       editorProps: {
