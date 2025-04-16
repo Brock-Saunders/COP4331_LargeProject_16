@@ -7,20 +7,35 @@ import EditorNavbar from '../components/EditorNavbar';
 import EditorFooter from '../components/EditorFooter';
 import useGetDocuments, { DocumentData } from '../hooks/useGetDocuments';
 import useAddDocuments from '../hooks/useAddDocuments';
+import { useNavigate } from 'react-router-dom';
 import { title } from 'process';
+import { json } from 'stream/consumers';
 
-const userId = localStorage.getItem('userId') || '';
+// TODO: redirect to login page when we cant get user id
+
 
 const Documents: React.FC = () => {
-  // Use the custom hook to fetch documents from your API.
-  const { documents, error: getAllDocsError, loading: getAllDocsLoading, refetch: refetchGetAllDocs } = useGetDocuments(userId);
-  // Use the custom hook to add a new document.
-  const { addDocument, loading: addDocLoading, error: addDocError } = useAddDocuments(userId);
+  const userDataStr = localStorage.getItem("user_data"); 
+  const navigate = useNavigate(); 
+  let userId = null; 
+  if (userDataStr) {
+    const userData = JSON.parse(userDataStr); 
+    userId = userData.userId; 
+  }
 
+  if(!userId) {
+    navigate('/login'); 
+  }
+
+
+  const { documents, error: getAllDocsError, loading: getAllDocsLoading, refetch: refetchGetAllDocs } = useGetDocuments(userId);
+  const { addDocument, loading: addDocLoading, error: addDocError } = useAddDocuments(userId);
   const [mainEditor, setMainEditor] = useState<any>(null);
   const [currFileId, setCurrFileId] = useState<string>("");
 
-  // Update currFileId when documents are fetched and non-empty.
+
+
+
   useEffect(() => {
     if (documents.length > 0 && !documents.find(doc => doc._id === currFileId)) {
       setCurrFileId(documents[0]._id);
