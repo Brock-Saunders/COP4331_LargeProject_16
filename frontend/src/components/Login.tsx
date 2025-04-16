@@ -30,7 +30,7 @@ function Login({ onLogin }: LoginProps) {
     // https://largeproj.alexcanapp.xyz/api/users/login
     //change localhost to largeproj when put on the lightsail server
     try {
-      const response = await fetch('https://largeproj.alexcanapp.xyz:5000/api/users/login', {
+      const response = await fetch('https://largeproj.alexcanapp.xyz/api/users/login', {
         method: 'POST',
         body: js,
         headers: {
