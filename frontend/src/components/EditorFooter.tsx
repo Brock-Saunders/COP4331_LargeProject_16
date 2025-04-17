@@ -44,10 +44,10 @@ const EditorFooter: React.FC<EditorFooterProps> = ({ lastSaved, lastUpdated, wor
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem>
-          <label className="p-4 text-black dark:text-white">
+          <label className="p-4 text-white dark:text-white">
             Word Count: {wordCount}
           </label>
-          <label className="p-4 text-black dark:text-white">
+          <label className="p-4 text-white dark:text-white">
             Character Count: {charCount}
           </label>
         </NavbarItem>
