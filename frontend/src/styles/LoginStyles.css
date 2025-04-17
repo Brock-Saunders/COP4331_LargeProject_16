@@ -1,110 +1,115 @@
 .login-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: #1f1f1f; /* dark grayish background */
-    height: 100vh;
-    width: 100%;
-    position: relative;
-    overflow: hidden;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #1f1f1f;
+  /* dark grayish background */
+  height: 100vh;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
 
-  .login-card {
-    display: flex;
-    width: 700px;
-    height: 600px;
-    margin: auto;
-    z-index: 1;
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
-  }
-  
-  .login-left, .login-right {
-    flex: 1;
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  
-  .login-left {
-    background: linear-gradient(to bottom right, #b7b7b7, #a8a8a8);
-  }
-  
-  .login-right {
-    background: linear-gradient(to bottom right, #1f1f1f, #3a3a3a);
-    color: white;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .login-title {
-    font-size: 30px;
-    font-weight: bold;
-    margin-bottom: 6px;
-    color: #333;
-  }
-  
-  .login-subtitle {
-    font-size: 14px;
-    color: #888;
-    margin-bottom: 20px;
-  }
-  
-  .login-input {
-    padding: 12px;
-    margin: 8px 0;
-    border-radius: 12px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-    width: 100%;
-    background-color: #e0e0e0; /* <-- New line to make it light gray */
-    color: #1f1f1f; /* Optional: ensures text is dark and readable */
-  }
-  
-  .login-button {
-    padding: 12px;
-    margin-top: 16px;
-    background-color: #3a3a3a; /* light gray */
-    color: #d3d3d3;
-    border: none;
-    border-radius: 25px;
-    font-weight: 600;
-    cursor: pointer;
-    width: 100%;
-  }
-  
-  .login-button:hover {
-    background-color: #bcbcbc;
-  }
-  
-  .signup-button {
-    background: white;
-    color: #3a3a3a;
-    border: none;
-    padding: 12px 24px;
-    margin-top: 16px;
-    font-weight: bold;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .signup-button:hover {
-    background: #f0f0f0;
-  }
-  
-  .login-message {
-    margin-top: 10px;
-    color: #3a3a3a;
-    font-size: 10px;
-  }
+.login-card {
+  display: flex;
+  width: 700px;
+  height: 600px;
+  margin: auto;
+  z-index: 1;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+}
 
-  .new-here-heading {
-    font-size: 22px; /* or whatever size you want */
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
+.login-left,
+.login-right {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
+.login-left {
+  background: linear-gradient(to bottom right, #b7b7b7, #a8a8a8);
+}
+
+.login-right {
+  background: linear-gradient(to bottom right, #1f1f1f, #3a3a3a);
+  color: white;
+  align-items: center;
+  text-align: center;
+}
+
+.login-title {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.login-subtitle {
+  font-size: 14px;
+  color: #3a3939;
+  margin-bottom: 20px;
+}
+
+.login-input {
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  width: 100%;
+  background-color: #e0e0e0;
+  /* <-- New line to make it light gray */
+  color: #1f1f1f;
+  /* Optional: ensures text is dark and readable */
+}
+
+.login-button {
+  padding: 12px;
+  margin-top: 16px;
+  background-color: #3a3a3a;
+  /* light gray */
+  color: #d3d3d3;
+  border: none;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+}
+
+.login-button:hover {
+  background-color: #bcbcbc;
+}
+
+.signup-button {
+  background: white;
+  color: #3a3a3a;
+  border: none;
+  padding: 12px 24px;
+  margin-top: 16px;
+  font-weight: bold;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.signup-button:hover {
+  background: #f0f0f0;
+}
+
+.login-message {
+  margin-top: 10px;
+  color: #3a3a3a;
+  font-size: 10px;
+}
+
+.new-here-heading {
+  font-size: 22px;
+  /* or whatever size you want */
+  font-weight: 600;
+  margin-bottom: 8px;
+}
