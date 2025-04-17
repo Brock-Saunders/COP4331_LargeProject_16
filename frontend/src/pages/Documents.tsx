@@ -116,6 +116,8 @@ const Documents: React.FC = () => {
       console.log("Document created with id:", newId);
       // Refetch documents to update the list in the sidebar.
       refetchGetAllDocs();
+      setCurrFileId(newId); // Set the current file ID to the new file
+      return newId; // Return the new file ID
     } else {
       console.error("Failed to create document", addDocError);
     }

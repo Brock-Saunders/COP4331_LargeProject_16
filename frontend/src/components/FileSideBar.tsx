@@ -24,7 +24,7 @@ interface SideBarProps {
   files: File[];
   currentFileId: string;
   onSelectFile: (fileId: string) => void;
-  onAddnewFile: () => void;
+  onAddnewFile: () => Promise<string>;
   onDeleteFile: () => void;
   onDownload: () => void;
 }
@@ -59,6 +59,13 @@ const FileSideBar: React.FC<SideBarProps> = ({
     setSortedFiles(sorted);
   };
 
+  const handleAddNewFile = async () => {
+    const newFileId = await onAddnewFile(); // Call the function and get the new file ID
+    if (newFileId) {
+      onSelectFile(newFileId); // Navigate to the new file
+    }
+  };
+
   return (
     <div className= "w-80 sticky pr-2 rounded-md col-span-1 text-white">
       <div className="h-full border border-gray-500 bg-black rounded-lg shadow-md flex flex-col ">
@@ -84,7 +91,7 @@ const FileSideBar: React.FC<SideBarProps> = ({
             </button>
             <button 
               className="bg-slate-700 px-3 py-1 rounded hover:bg-slate-600"
-              onClick={() => onAddnewFile()}
+              onClick={handleAddNewFile}
             >
               <FilePlus size={20} />
             </button>
