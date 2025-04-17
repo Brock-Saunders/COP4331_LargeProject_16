@@ -99,14 +99,14 @@ function Login({ onLogin }: LoginProps) {
               Log In
             </button>
             <span className="login-message">{message}</span>
+          </form>
+        </div>
+        <div className="login-right">
+          <h2 className="new-here-heading">New Here?</h2>
+          <p>Sign up and discover a great amount of new opportunities!</p>
+          <a href="/register" className="signup-button">Sign Up</a>
         </div>
       </div>
-      <div className="login-right">
-        <h2 className="new-here-heading">New Here?</h2>
-        <p>Sign up and discover a great amount of new opportunities!</p>
-        <a href="/register" className="signup-button">Sign Up</a>
-      </div>
-    </div>
     </div >
   );
 }
