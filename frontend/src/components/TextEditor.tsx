@@ -25,17 +25,17 @@ const TextEditor: React.FC<TextEditorProps> = ({ content, setContent, onEditorRe
       autofocus: false,
       editorProps: {
         attributes: {
-          class: "editor-container overflow-hidden bg-zinc-800 p-6 focus:outline-none",
+          class: "editor-container overflow-hidden bg-white dark:bg-zinc-800 text-black dark:text-white p-6 focus:outline-none",
         },
       },
       onUpdate({ editor }) {
         setContent(editor.getHTML());
       },
-      injectCSS:true,
+      injectCSS: true,
     });
 
     setEditor(newEditor);
-    onEditorReady(newEditor); 
+    onEditorReady(newEditor);
 
     return () => {
       newEditor.destroy();
