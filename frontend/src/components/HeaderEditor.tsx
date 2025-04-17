@@ -35,7 +35,7 @@ const HeaderEditor: React.FC<HeaderEditorProps> = ({ title, setTitle, onEnter })
         autofocus: true,
         // update header when title changes 
         onUpdate({ editor }) {
-          const text = editor.state.doc.textContext;
+          const text = editor.getText();
           setTitle(text);
         }
       });
@@ -48,7 +48,7 @@ const HeaderEditor: React.FC<HeaderEditorProps> = ({ title, setTitle, onEnter })
     }
   }, []);
   useEffect(() => {
-    if (editor && editor.state.doc.textContent !== title) {
+    if (editor && editor.getHTML() !== title) {
       editor.commands.setContent(title, false);
     }
   }, [title]);
