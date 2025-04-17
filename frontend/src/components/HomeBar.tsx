@@ -94,10 +94,10 @@ const Homebar: React.FC<HomebarProps> = ({ username, onLogout, onSearch, onCreat
               </span>
             </button>
             {dropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg z-10 text-white">
+              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-10">
                 <button
                   onClick={onLogout}
-                  className="block px-4 py-2 text-sm hover:bg-gray-700 w-full text-left"
+                  className="block px-4 py-2 text-sm text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 w-full text-left"
                 >
                   Logout
                 </button>
