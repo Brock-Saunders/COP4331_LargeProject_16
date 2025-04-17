@@ -73,7 +73,7 @@ function Login({ onLogin }: LoginProps) {
     <div className="login-wrapper">
       <div className="login-card">
         <div className="login-left">
-          <div className="login-form">
+          <form className="login-form" onSubmit={doLogin}>
             <h1 className="login-title">
               Notes App
             </h1>
@@ -95,19 +95,19 @@ function Login({ onLogin }: LoginProps) {
               onChange={(e) => setPassword(e.target.value)}
               className="login-input"
             />
-            <button onClick={doLogin} className="login-button">
+            <button type="submit" className="login-button">
               Log In
             </button>
             <span className="login-message">{message}</span>
-          </div>
-        </div>
-        <div className="login-right">
-          <h2 className="new-here-heading">New Here?</h2>
-          <p>Sign up and discover a great amount of new opportunities!</p>
-          <a href="/register" className="signup-button">Sign Up</a>
         </div>
       </div>
+      <div className="login-right">
+        <h2 className="new-here-heading">New Here?</h2>
+        <p>Sign up and discover a great amount of new opportunities!</p>
+        <a href="/register" className="signup-button">Sign Up</a>
+      </div>
     </div>
+    </div >
   );
 }
 
