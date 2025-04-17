@@ -35,7 +35,7 @@ const HeaderEditor: React.FC<HeaderEditorProps> = ({ title, setTitle, onEnter })
         autofocus: true,
         // update header when title changes 
         onUpdate({ editor }) {
-          setTitle(editor.getHTL());
+          setTitle(editor.getHTML());
         }
       });
       headerInstanceRef.current = newEditor;
