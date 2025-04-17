@@ -103,7 +103,7 @@ function Login({ onLogin }: LoginProps) {
         </div>
         <div className="login-right">
           <h2 className="new-here-heading">New Here?</h2>
-          <p>Sign up and discover a great amount of new opportunities!</p>
+          <p>Create an account!</p>
           <a href="/register" className="signup-button">Sign Up</a>
         </div>
       </div>
