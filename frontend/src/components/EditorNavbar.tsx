@@ -53,13 +53,13 @@ const EditorNavbar: React.FC<EditorNavbarProps> = ({ onSave, onDeleteFile, onDow
   return (
     <Navbar className="rounded-md border-gray-500 bg-zinc-900 px-4">
       <NavbarBrand>
-      <button
-        className="flex items-center space-x-2 cursor-pointer focus:outline-none"
-        onClick={() => (window.location.href = "/home")}
-      >
-        <File />
-        <p className="font-bold text-inherit">Notes App</p>
-      </button>
+        <button
+          className="flex items-center space-x-2 cursor-pointer focus:outline-none"
+          onClick={() => (window.location.href = "/home")}
+        >
+          <File />
+          <p className="font-bold text-inherit">Notes App</p>
+        </button>
       </NavbarBrand>
       <NavbarContent justify="center">
         <NavbarItem>
@@ -70,17 +70,17 @@ const EditorNavbar: React.FC<EditorNavbarProps> = ({ onSave, onDeleteFile, onDow
                 Save
               </div>
             </button>
-            <button className="cursor-pointer items-center space-x-2 focus:outline-none" 
-            onClick={onDownload} disabled={disabled}
+            <button className="cursor-pointer items-center space-x-2 focus:outline-none"
+              onClick={onDownload} disabled={disabled}
             >
               <div className="flex items-center justify-center gap-x-1.5">
                 <Download />
                 Download
               </div>
             </button>
-            <button className="cursor-pointer items-center space-x-2 focus:outline-none"  
-            onClick={onDeleteFile} // Pass the current file ID
-            disabled={disabled}
+            <button className="cursor-pointer items-center space-x-2 focus:outline-none"
+              onClick={onDeleteFile} // Pass the current file ID
+              disabled={disabled}
             >
               <div className="flex items-center justify-center gap-x-1.5">
                 <Trash2 />
@@ -101,8 +101,16 @@ const EditorNavbar: React.FC<EditorNavbarProps> = ({ onSave, onDeleteFile, onDow
                 </div>
               </button>
             </DropdownTrigger>
-            <DropdownMenu aria-label="Profile Actions" variant="flat" className='bg-black rounded-md'>
-              <DropdownItem key="logout" color="danger" onClick={handleLogout}>
+            <DropdownMenu
+              aria-label="Profile Actions"
+              variant="flat"
+              className="bg-white dark:bg-black text-black dark:text-white rounded-md"
+            >
+              <DropdownItem
+                key="logout"
+                onClick={handleLogout}
+                className="hover:bg-gray-100 dark:hover:bg-gray-800 text-red-600 dark:text-red-400"
+              >
                 Log Out
               </DropdownItem>
             </DropdownMenu>
