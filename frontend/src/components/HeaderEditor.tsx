@@ -48,7 +48,7 @@ const HeaderEditor: React.FC<HeaderEditorProps> = ({ title, setTitle, onEnter })
     }
   }, []);
   useEffect(() => {
-    if (editor && editor.getHTML() !== title) {
+    if (editor && editor.state.doc.textContent !== title) {
       editor.commands.setContent(title, false);
     }
   }, [title]);
